@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+
+  "name": "Inspiration Tab",
+  "description": "Description",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "tabs",
+    "https://ajax.googleapis.com/",
+    "https://www.behance.net/"
+  ],
+  "content_security_policy":"script-src 'self' https://www.behance.net/; object-src 'self'",
+  "chrome_url_overrides" : {
+    "newtab": "newtab.html"
+  },
+  "content_scripts": [
+    {
+        "matches": ["http://*/*", "https://*/*"],
+        "js": ["js/be.js", "js/inspiration.js", "js/jquery-3.2.1.min.js"]
+    }
+]
+}

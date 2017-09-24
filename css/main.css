@@ -1,0 +1,41 @@
+body {
+  margin: 0; }
+
+.settings {
+  position: fixed;
+  width: 25px;
+  height: 25px;
+  bottom: 10px;
+  left: 10px; }
+  .settings img {
+    width: 100%;
+    height: 100%;
+    opacity: 0.5; }
+
+.grid .cell {
+  width: 100%;
+  height: auto;
+  overflow: auto;
+  float: left;
+  cursor: pointer; }
+  @media (min-width: 450px) {
+    .grid .cell {
+      width: 50%; } }
+  @media (min-width: 700px) {
+    .grid .cell {
+      width: 33.3%; } }
+  @media (min-width: 1000px) {
+    .grid .cell {
+      width: 20%; } }
+  @media (min-width: 2000px) {
+    .grid .cell {
+      width: 14.28571%; } }
+  .grid .cell a {
+    -moz-transition: opacity 0.1s;
+    -o-transition: opacity 0.1s;
+    -webkit-transition: opacity 0.1s;
+    transition: opacity 0.1s; }
+  .grid .cell a:hover {
+    opacity: 0.9; }
+  .grid .cell img {
+    width: 100%; }
