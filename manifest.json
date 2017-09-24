@@ -4,13 +4,17 @@
   "name": "Inspiration Tab",
   "description": "Description",
   "version": "1.0",
-
+  "options_ui": {
+     "page": "settings.html",
+     "chrome_style": true
+   },
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
   },
   "permissions": [
     "tabs",
+    "storage",
     "https://ajax.googleapis.com/",
     "https://www.behance.net/"
   ],
@@ -21,7 +25,7 @@
   "content_scripts": [
     {
         "matches": ["http://*/*", "https://*/*"],
-        "js": ["js/be.js", "js/inspiration.js", "js/jquery-3.2.1.min.js"]
+        "js": ["js/be.js", "js/settings.js", "js/inspiration.js", "js/jquery-3.2.1.min.js"]
     }
 ]
 }

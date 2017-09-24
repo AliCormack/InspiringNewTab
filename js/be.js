@@ -124,6 +124,18 @@
 		param = typeof param === "object" ?
 			param :
 			{q: param};
+
+			console.log(param);
+
+		var ext = "projects";
+		return get(ext, param, callback);
+	};
+
+	be.project.search = function(searchTerm, sorting, callback) {
+		var param = {q: searchTerm, sort:sorting};
+
+		console.log(param);
+
 		var ext = "projects";
 		return get(ext, param, callback);
 	};
