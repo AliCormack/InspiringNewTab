@@ -12,10 +12,6 @@ chrome.storage.sync.get(['searchTerm', 'sortMethod'], function(items) {
 
 function getImages()
 {
-  var params = 'q='+searchTerm+'&sort='+sortMethod;
-  console.log(params);
-
-
   // Using callbacks
   be.project.search(searchTerm, sortMethod, function success(results) {
 

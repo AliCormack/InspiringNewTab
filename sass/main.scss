@@ -34,28 +34,36 @@ body
   .cell
   {
     width: 100%; // default
-    height:auto;
-    overflow:auto;
+    // height:auto;
+    overflow:hidden;
     float:left;
-    // opacity:1;
-
     cursor:pointer;
+
+    $heightRatio: 79 / 101;
+
+    background:rgba(0,0,0,0.1);
 
     @media (min-width: 450px) {
       width: 50%;
+      height:calc((50vw) * #{$heightRatio} - 7px);
     }
 
     @media (min-width: 700px) {
       width: 33.3%;
+        height:calc((33.3vw) * #{$heightRatio} - 5px);
     }
 
     @media (min-width: 1000px) {
       width: 20%;
+        height:calc(20vw * #{$heightRatio} - 5px);
     }
 
     @media (min-width: 2000px) {
       width: 1/7 * 100%;
+      height:calc((14.28vw) * #{$heightRatio} - 3px);
     }
+
+
 
     a
     {
