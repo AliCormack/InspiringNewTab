@@ -25,9 +25,15 @@ function getImages()
     }
     $(".grid").append(newHTML.join(""));
 
+    $(".scroll").remove();    
+    var scrollToLoadCell = '<div class = "cell scroll"><span>&#9679; &#9679; &#9679;</span></div>';
+    $(".grid").append(scrollToLoadCell);
+
     fadeIn();
 
   });
+
+  
 }
 
 function loadNewContent()
