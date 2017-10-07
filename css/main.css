@@ -1,5 +1,6 @@
 body {
-  margin: 0; }
+  margin: 0;
+  background: rgba(0, 0, 0, 0.1); }
 
 .settings {
   position: fixed;
@@ -18,8 +19,7 @@ body {
     width: 100%;
     overflow: hidden;
     float: left;
-    cursor: pointer;
-    background: rgba(0, 0, 0, 0.1); }
+    cursor: pointer; }
     @media (min-width: 450px) {
       .grid .cell {
         width: 50%;
@@ -44,4 +44,9 @@ body {
     .grid .cell a:hover {
       opacity: 0.9; }
     .grid .cell img {
+      opacity: 1;
+      transition: opacity 0.3s;
       width: 100%; }
+    .grid .cell img[data-src] {
+      width: 100%;
+      opacity: 0; }

@@ -21,9 +21,11 @@ function getImages()
 
         var project = results.projects[i];
 
-        newHTML.push(' <div class = "cell"> <a href = '+project.url+'> <img src=' + project.covers['404'] + '></a></img></div>');
+        newHTML.push(' <div class = "cell"> <a href = '+project.url+'> <img data-src=' + project.covers['404'] + '></a></img></div>');
     }
     $(".grid").append(newHTML.join(""));
+
+    fadeIn();
 
   });
 }
@@ -32,6 +34,16 @@ function loadNewContent()
 {
   contentLoads++;
   getImages();
+}
+
+function fadeIn()
+{
+  [].forEach.call(document.querySelectorAll('img[data-src]'), function(img) {
+    img.setAttribute('src', img.getAttribute('data-src'));
+    img.onload = function() {
+      img.removeAttribute('data-src');
+    };
+  });
 }
 
 $(document).ready(function()
