@@ -25,12 +25,13 @@ body
   {
     width:100%;
     height:100%;
-    opacity:0.5;
+    opacity:0.8;
   }
 }
-
 .grid
 {
+  overflow:auto;
+
   .cell
   {
     width: 100%; // default
@@ -80,3 +81,4 @@ body
     }
   }
 }
+

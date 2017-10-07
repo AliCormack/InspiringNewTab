@@ -25,7 +25,7 @@
   "content_scripts": [
     {
         "matches": ["http://*/*", "https://*/*"],
-        "js": ["js/be.js", "js/settings.js", "js/inspiration.js", "js/jquery-3.2.1.min.js"]
+        "js": ["js/be.js", "js/settings.js", "js/inspiration.js", "js/jquery-3.2.1.min.js", "js/jquery.endless-scroll.js"]
     }
 ]
 }

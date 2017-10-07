@@ -10,36 +10,38 @@ body {
   .settings img {
     width: 100%;
     height: 100%;
-    opacity: 0.5; }
+    opacity: 0.8; }
 
-.grid .cell {
-  width: 100%;
-  overflow: hidden;
-  float: left;
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0.1); }
-  @media (min-width: 450px) {
-    .grid .cell {
-      width: 50%;
-      height: calc((50vw) * 0.78218 - 7px); } }
-  @media (min-width: 700px) {
-    .grid .cell {
-      width: 33.3%;
-      height: calc((33.3vw) * 0.78218 - 5px); } }
-  @media (min-width: 1000px) {
-    .grid .cell {
-      width: 20%;
-      height: calc(20vw * 0.78218 - 5px); } }
-  @media (min-width: 2000px) {
-    .grid .cell {
-      width: 14.28571%;
-      height: calc((14.28vw) * 0.78218 - 3px); } }
-  .grid .cell a {
-    -moz-transition: opacity 0.1s;
-    -o-transition: opacity 0.1s;
-    -webkit-transition: opacity 0.1s;
-    transition: opacity 0.1s; }
-  .grid .cell a:hover {
-    opacity: 0.9; }
-  .grid .cell img {
-    width: 100%; }
+.grid {
+  overflow: auto; }
+  .grid .cell {
+    width: 100%;
+    overflow: hidden;
+    float: left;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.1); }
+    @media (min-width: 450px) {
+      .grid .cell {
+        width: 50%;
+        height: calc((50vw) * 0.78218 - 7px); } }
+    @media (min-width: 700px) {
+      .grid .cell {
+        width: 33.3%;
+        height: calc((33.3vw) * 0.78218 - 5px); } }
+    @media (min-width: 1000px) {
+      .grid .cell {
+        width: 20%;
+        height: calc(20vw * 0.78218 - 5px); } }
+    @media (min-width: 2000px) {
+      .grid .cell {
+        width: 14.28571%;
+        height: calc((14.28vw) * 0.78218 - 3px); } }
+    .grid .cell a {
+      -moz-transition: opacity 0.1s;
+      -o-transition: opacity 0.1s;
+      -webkit-transition: opacity 0.1s;
+      transition: opacity 0.1s; }
+    .grid .cell a:hover {
+      opacity: 0.9; }
+    .grid .cell img {
+      width: 100%; }

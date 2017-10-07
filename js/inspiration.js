@@ -3,6 +3,7 @@
 
 var searchTerm = '';
 var sortMethod = '';
+var contentLoads = 1;
 
 chrome.storage.sync.get(['searchTerm', 'sortMethod'], function(items) {
     if(typeof items.searchTerm !== 'undefined') searchTerm = items.searchTerm;
@@ -13,7 +14,7 @@ chrome.storage.sync.get(['searchTerm', 'sortMethod'], function(items) {
 function getImages()
 {
   // Using callbacks
-  be.project.search(searchTerm, sortMethod, function success(results) {
+  be.project.search(searchTerm, sortMethod, contentLoads, function success(results) {
 
     var newHTML = [];
     for (var i = 0; i < results.projects.length; i++) {
@@ -22,13 +23,16 @@ function getImages()
 
         newHTML.push(' <div class = "cell"> <a href = '+project.url+'> <img src=' + project.covers['404'] + '></a></img></div>');
     }
-    $(".grid").html(newHTML.join(""));
+    $(".grid").append(newHTML.join(""));
 
   });
 }
 
-
-
+function loadNewContent()
+{
+  contentLoads++;
+  getImages();
+}
 
 $(document).ready(function()
 {
@@ -42,4 +46,13 @@ $(document).ready(function()
       window.open(chrome.runtime.getURL('options.html'));
     }
   });
+
+  // Infinite Scroll
+
+  $(window).on('scroll', function() {
+      if($(window).scrollTop() + $(window).height() >= $('body')[0].scrollHeight) {
+        loadNewContent();
+      }
+  })
+
 });
