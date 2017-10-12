@@ -1,16 +1,21 @@
 {
   "manifest_version": 2,
 
-  "name": "Inspiration Tab",
-  "description": "Description",
-  "version": "1.0",
+  "name": "Inspire",
+  "short_name": "Inspire",
+  "description": "Get inspired with every new tab. Displays a cutomisable gallery of the best current work from around the net.",
+  "version": "0.0.0.2",
   "options_ui": {
      "page": "settings.html",
      "chrome_style": true
    },
-  "browser_action": {
-    "default_icon": "icon.png",
-    "default_popup": "popup.html"
+   "icons": { 
+      "16": "img/icon/icon16.png",
+      "32": "img/icon/icon32.png",
+      "48": "img/icon/icon48.png",
+      "128": "img/icon/icon128.png",
+      "256": "img/icon/icon256.png",
+      "512": "img/icon/icon512.png"
   },
   "permissions": [
     "tabs",

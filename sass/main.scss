@@ -5,6 +5,16 @@
     transition:         $transition;
 }
 
+@mixin no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
 body
 {
   margin:0;
@@ -20,7 +30,7 @@ body
   width:$size;
   height:$size;
   bottom:$buffer;
-  left:$buffer;
+  right:$buffer;
 
   img
   {
@@ -29,6 +39,39 @@ body
     opacity:0.8;
   }
 }
+
+.time-and-date
+{
+  $buffer : 20px;
+
+  background:rgba(0,0,0,0.4);
+
+  position:fixed;
+  // width:$size;
+  // height:$size;|
+  bottom:$buffer;
+  left:$buffer;
+
+  color:white;
+  font-family: 'Saira', sans-serif;
+  text-align:center;
+
+  @include no-select;
+
+  h1
+  {    
+    font-size: 100px;
+    margin:0px 40px -40px 40px;
+  }
+
+  h2
+  {
+    color:rgba(255, 255, 255, 0.6);
+    font-size: 20px;
+    margin:0px 0px 40px 0px;
+  }
+}
+
 .grid
 {
   overflow:auto;
