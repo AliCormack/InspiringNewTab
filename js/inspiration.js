@@ -31,8 +31,16 @@ function getImages()
 
     fadeIn();
 
+    var div = $(".grid").height();
+    var win = $(window).height();
+
+    if (div < win ) {
+      getImages();
+    }
+
   });
 
+ 
   
 }
 
@@ -56,13 +64,7 @@ $(document).ready(function()
 {
   $( "#settings-button" ).click(function()
   {
-    if (chrome.runtime.openOptionsPage) {
-      // New way to open options pages, if supported (Chrome 42+).
-      chrome.runtime.openOptionsPage();
-    } else {
-      // Reasonable fallback.
-      window.open(chrome.runtime.getURL('options.html'));
-    }
+    $("#settings-window").toggle();
   });
 
   // Infinite Scroll
@@ -73,4 +75,47 @@ $(document).ready(function()
       }
   })
 
+  function checkTime(i) {
+    if (i < 10) {
+      i = "0" + i;
+    }
+    return i;
+  }
+  
+  function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    // add a zero in front of numbers<10
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('time').innerHTML = h + ":" + m;
+
+    var options = { weekday: 'long', month: 'long', day: 'numeric' };
+
+    document.getElementById('date').innerHTML = today.toLocaleDateString('en-GB', options);
+
+    t = setTimeout(function() {
+      startTime()
+    }, 500);
+  }
+  startTime();
+
 });
+
+// Tracking
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-108090048-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); 
+  ga.type = 'text/javascript'; 
+  ga.async = true;
+  ga.src = 'https://ssl.google-analytics.com/ga.js';
+  
+  var s = document.getElementsByTagName('script')[0]; 
+  s.parentNode.insertBefore(ga, s);
+})();

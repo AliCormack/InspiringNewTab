@@ -1,14 +1,10 @@
 {
   "manifest_version": 2,
 
-  "name": "Inspire",
-  "short_name": "Inspire",
+  "name": "Inspire Gallery New Tab",
+  "short_name": "Inspire Gallery",
   "description": "Get inspired with every new tab. Displays a cutomisable gallery of the best current work from around the net.",
   "version": "0.0.0.2",
-  "options_ui": {
-     "page": "settings.html",
-     "chrome_style": true
-   },
    "icons": { 
       "16": "img/icon/icon16.png",
       "32": "img/icon/icon32.png",
@@ -23,7 +19,7 @@
     "https://ajax.googleapis.com/",
     "https://www.behance.net/"
   ],
-  "content_security_policy":"script-src 'self' https://www.behance.net/; object-src 'self'",
+  "content_security_policy":"script-src 'self' https://www.behance.net/ https://ssl.google-analytics.com; object-src 'self'",
   "chrome_url_overrides" : {
     "newtab": "newtab.html"
   },

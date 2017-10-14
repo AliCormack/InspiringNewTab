@@ -4,8 +4,12 @@
   <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="js/jquery.endless-scroll.js"></script>
   <script type="text/javascript" src="js/be.js"></script>
+  <script type="text/javascript" src="js/settings.js"></script>
+
   <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="css/lib.css">
   <link href="https://fonts.googleapis.com/css?family=Saira" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet">
 
   <title>New Tab</title>
 
@@ -17,15 +21,64 @@
       
     </div>
 
-    <div class = "settings">
+    <div class = "settings-btn">
       <div id="settings-button">
         <img src="img/settings.svg" alt="Settings">
       </div>
     </div>
 
-    <div class = "time-and-date">
-      <h1>17:41</h1>
-      <h2>Thursday 2nd October</h2>
+    <div id="time-and-date" class = "time-and-date">
+      <h1 id="time">17:41</h1>
+      <h2 id="date">Thursday 2nd October</h2>
+    </div>
+
+      <div id="settings-window" class="settings-window">
+        <h1>Settings</h1>
+        <div class="seperator"></div>
+        <h2>Show</h2>
+
+        <div class="toggle">
+          Time
+          <label class="switch">
+            <input id="time_enabled" type="checkbox">
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="toggle">
+            Date
+            <label class="switch">
+              <input id="date_enabled" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+        <div class="seperator"></div>
+
+        <h2>Gallery</h2>
+
+        <div class="gallery-setting">
+          Search Terms
+          <input id="search_term" type="text" name="searchterm"><br>
+        </div>
+
+      <div class="gallery-setting">
+        Sorting Method
+        <select id="sort_method">
+         <option value="featured_date">Featured Date</option>
+         <option value="appreciations">Appreciations</option>
+         <option value="views">Views</option>
+         <option value="comments">Comments</option>
+         <option value="published_date">Published Date</option>
+        </select>
+      </div>
+
+      <div class="seperator"></div>
+
+      <div class="footnote">
+        Inspire Gallery New Tab &copy; by <a href="http://www.alicormack.com">Ali Cormack </a>
+      </div>
+
     </div>
 
 

@@ -1,25 +1,73 @@
 body {
   margin: 0;
-  background: white; }
+  background: white;
+  font-family: 'Cabin', sans-serif; }
 
-.settings {
+.settings-btn {
   position: fixed;
   width: 25px;
   height: 25px;
   bottom: 10px;
-  right: 10px; }
-  .settings img {
+  right: 10px;
+  cursor: pointer; }
+  .settings-btn img {
     width: 100%;
     height: 100%;
     opacity: 0.8; }
 
+.settings-window {
+  position: fixed;
+  right: 10px;
+  bottom: 45px;
+  display: none;
+  width: 250px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 7px;
+  color: white;
+  padding: 20px; }
+  .settings-window h1 {
+    margin: 0px 0 10px 0; }
+  .settings-window h2 {
+    margin: 0 0 0 0; }
+  .settings-window .seperator {
+    width: auto;
+    background: rgba(255, 255, 255, 0.5);
+    height: 1px;
+    margin: 10px 0 10px 0; }
+  .settings-window .toggle {
+    line-height: 30px;
+    height: 30px; }
+  .settings-window .gallery-setting {
+    margin: 7px 0 7px 0;
+    height: 23px;
+    line-height: 23px; }
+  .settings-window #search_term {
+    padding: 3px;
+    height: 17px; }
+  .settings-window #search_term, .settings-window #sort_method {
+    position: absolute;
+    display: inline-block;
+    width: 130px;
+    right: 20px;
+    border: 0;
+    background: rgba(255, 255, 255, 0.9);
+    font-family: 'Saira', sans-serif; }
+  .settings-window #sort_method {
+    font-family: 'Saira', sans-serif;
+    width: 136px; }
+  .settings-window .footnote {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 10px; }
+    .settings-window .footnote a {
+      color: inherit; }
+
 .time-and-date {
-  background: rgba(0, 0, 0, 0.4);
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.8);
   position: fixed;
   bottom: 20px;
   left: 20px;
   color: white;
-  font-family: 'Saira', sans-serif;
   text-align: center;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -27,14 +75,15 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  pointer-events: none; }
+  pointer-events: none;
+  padding: 20px;
+  min-width: 240px; }
   .time-and-date h1 {
     font-size: 100px;
-    margin: 0px 40px -40px 40px; }
+    margin: -15px 0 -15px 0; }
   .time-and-date h2 {
-    color: rgba(255, 255, 255, 0.6);
     font-size: 20px;
-    margin: 0px 0px 40px 0px; }
+    margin: 0; }
 
 .grid {
   overflow: auto; }
@@ -68,7 +117,7 @@ body {
       .grid .cell {
         width: 20%;
         height: calc(20vw * 0.78218 - 5px); } }
-    @media (min-width: 2000px) {
+    @media (min-width: 1500px) {
       .grid .cell {
         width: 14.28571%;
         height: calc((14.28vw) * 0.78218 - 3px); } }

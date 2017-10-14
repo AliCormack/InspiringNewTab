@@ -19,18 +19,22 @@ body
 {
   margin:0;
   background:white;
+  font-family: 'Cabin', sans-serif;
 }
 
-.settings
-{
-  $size : 25px;
-  $buffer : 10px;
+$settings-buffer : 10px;
+$settings-btn-size : 25px;
+
+.settings-btn
+{ 
 
   position:fixed;
-  width:$size;
-  height:$size;
-  bottom:$buffer;
-  right:$buffer;
+  width:$settings-btn-size;
+  height:$settings-btn-size;
+  bottom:$settings-buffer;
+  right:$settings-buffer;
+
+  cursor: pointer; 
 
   img
   {
@@ -40,11 +44,98 @@ body
   }
 }
 
+.settings-window
+{
+  position:fixed; 
+  right:$settings-buffer;
+  bottom:$settings-buffer * 2 + $settings-btn-size;
+
+  display:none;
+
+  width:250px;
+
+  background:rgba(0, 0, 0, 0.8);
+
+  border-radius: 7px;
+
+  color:white;
+
+  padding:20px;
+  
+
+  h1
+  {
+    margin:0px 0 10px 0;
+  }
+
+  h2{
+    margin:0 0 0 0;
+  }
+
+  .seperator
+  {
+    width:auto;
+    background:rgba(255,255,255,0.5);
+    height:1px;
+    margin:10px 0 10px 0;
+  }
+
+  .toggle
+  {
+    $height:30px;
+    line-height: $height;
+    height:$height;
+  }
+
+  .gallery-setting
+  {
+    margin:7px 0 7px 0;
+    height:23px;
+    line-height:23px;
+  }
+
+  $gallery-setting-field-width:130px;
+
+  #search_term
+  {
+    padding:3px;
+    height:23px - 6px;
+  }
+
+  #search_term, #sort_method {
+    position: absolute;
+    display: inline-block;
+    width:  $gallery-setting-field-width;
+    right:20px;
+    border:0;
+    background:rgba(255, 255, 255, 0.9);
+    font-family: 'Saira', sans-serif;
+  }
+
+  #sort_method
+  {
+    font-family: 'Saira', sans-serif;
+    width: $gallery-setting-field-width+6px;
+  }
+
+  .footnote
+  {
+    color:rgba(255, 255, 255, 0.5);
+    font-size:10px;
+
+    a {
+      color:inherit;
+      // text-decoration: none; /* no underline */
+    }
+  }
+}
+
 .time-and-date
 {
   $buffer : 20px;
+  border-radius: 7px;
 
-  background:rgba(0,0,0,0.4);
+  background:rgba(0,0,0,0.8);
 
   position:fixed;
   // width:$size;
@@ -53,22 +144,25 @@ body
   left:$buffer;
 
   color:white;
-  font-family: 'Saira', sans-serif;
+  // font-family: 'Saira', sans-serif;
   text-align:center;
 
   @include no-select;
 
+  padding:20px;
+
+  min-width:240px;
+
   h1
   {    
     font-size: 100px;
-    margin:0px 40px -40px 40px;
+    margin:-15px 0 -15px 0;
   }
 
   h2
   {
-    color:rgba(255, 255, 255, 0.6);
     font-size: 20px;
-    margin:0px 0px 40px 0px;
+    margin:0;
   }
 }
 
@@ -118,7 +212,7 @@ body
         height:calc(20vw * #{$heightRatio} - 5px);
     }
 
-    @media (min-width: 2000px) {
+    @media (min-width: 1500px) {
       width: 1/7 * 100%;
       height:calc((14.28vw) * #{$heightRatio} - 3px);
     }
