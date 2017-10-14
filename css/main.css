@@ -117,7 +117,7 @@ body {
       .grid .cell {
         width: 20%;
         height: calc(20vw * 0.78218 - 5px); } }
-    @media (min-width: 1500px) {
+    @media (min-width: 1200px) {
       .grid .cell {
         width: 14.28571%;
         height: calc((14.28vw) * 0.78218 - 3px); } }

@@ -212,7 +212,7 @@ $settings-btn-size : 25px;
         height:calc(20vw * #{$heightRatio} - 5px);
     }
 
-    @media (min-width: 1500px) {
+    @media (min-width: 1200px) {
       width: 1/7 * 100%;
       height:calc((14.28vw) * #{$heightRatio} - 3px);
     }
