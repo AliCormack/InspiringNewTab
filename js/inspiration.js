@@ -5,12 +5,15 @@ var searchTerm = '';
 var sortMethod = '';
 var contentLoads = 1;
 
+function clearImages()
+{
+  $(".grid").empty();
+}
+
 function getImages()
 {
   // Using callbacks
-  be.project.search(searchTerm, sortMethod, contentLoads, function success(results) {
-
-    
+  be.project.search(searchTerm, sortMethod, contentLoads, function success(results) {    
 
     var newHTML = [];
     for (var i = 0; i < results.projects.length; i++) {
@@ -31,6 +34,7 @@ function getImages()
     var win = $(window).height();
 
     if (div < win ) {
+      contentLoads++;
       getImages();
     }
 
@@ -64,7 +68,19 @@ $(document).ready(function()
     $( ".settings-btn" ).toggleClass('menu-open');
   });
 
-  
+  $("#search_term").on('keyup', function (e) {
+      if (e.keyCode == 13) {
+
+        var term = document.getElementById('search_term').value;      
+        chrome.storage.sync.set({
+          searchTerm: term
+        });
+        searchTerm = term;
+
+        clearImages();
+        getImages();
+      }
+  });
 
   // Infinite Scroll
 
