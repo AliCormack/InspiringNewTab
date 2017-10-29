@@ -64,6 +64,8 @@ $(document).ready(function()
     $( ".settings-btn" ).toggleClass('menu-open');
   });
 
+  
+
   // Infinite Scroll
 
   $(window).on('scroll', function() {

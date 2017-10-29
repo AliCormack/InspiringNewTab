@@ -3,6 +3,53 @@ body {
   background: white;
   font-family: 'Cabin', sans-serif; }
 
+.tutorial {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.8);
+  text-align: center;
+  color: white; }
+  .tutorial .content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 380px;
+    margin: 0; }
+    .tutorial .content p {
+      font-size: 1.3em;
+      margin: 0px 0 0px 0; }
+    .tutorial .content img {
+      margin-bottom: -35px; }
+    .tutorial .content h1 {
+      color: #008ae7;
+      font-size: 5em;
+      margin: 0px 0 0px 0; }
+    .tutorial .content h2 {
+      font-size: 2em;
+      margin: 0px 0 0px 0; }
+    .tutorial .content h3 {
+      font-size: 1.2em;
+      margin: 0px 0 0px 0; }
+    .tutorial .content h4 {
+      font-size: .8em;
+      margin: 0px 0 0px 0; }
+    .tutorial .content button {
+      border: none;
+      font-family: 'Cabin', sans-serif;
+      background: #008ae7;
+      color: white;
+      font-size: 1.5em;
+      padding: 10px 13px 10px 13px;
+      border-radius: 7px;
+      cursor: pointer; }
+    .tutorial .content button:hover {
+      color: #aaaaaa;
+      background: #04426b; }
+
 .menu-open {
   border-radius: 0 0 7px 7px !important; }
 

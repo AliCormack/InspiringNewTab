@@ -26,7 +26,8 @@ function restore_options() {
     searchTerm: '',
     sortMethod: 'featured_date',
     timeEnabled:true,
-    dateEnabled:true
+    dateEnabled:true,
+    tutorialViewed:false
   }, function(items) {
     document.getElementById('search_term').value = items.searchTerm;
     document.getElementById('sort_method').value = items.sortMethod;
@@ -38,7 +39,40 @@ function restore_options() {
     sortMethod = items.sortMethod
 
     getImages();
+
+    addTutorialIfRequired(items.tutorialViewed);
   });
+}
+
+function addTutorialIfRequired(tutorialViewed)
+{
+  if(!tutorialViewed)
+  {
+    $("body").append("<div id='tutorial' class='tutorial'>"+
+    "<div class='content'>"+
+      "<h3>Welcome to </h3>"+
+      "<img width=200 height=200 src='img/icon/Icon-Transparent-512.png'></img>"+
+      "<h1>Inspire</h1>"+
+      "<h2>New Tab Gallery</h2>"+
+      "<h4>Beta v0.0.0.4</h4>"+
+      "<br>"+
+      "<p>We hope you enjoy the gorgeous art and design fresh daily from around the web every day! </p>"+
+      "<br>"+
+      "<p>Using the preferences panel in the bottom right you can configure the page to your interests. Simply enter a search term to see related artwork. You can also change the sorting of images, e.g. by date or views.</p>"+
+      "<br>"+
+      "<button id='close-tutorial-btn' type='button'>Thanks, got it!</button>"+
+   "</div>"+
+"</div>");
+
+$( "#close-tutorial-btn" ).click(function()
+{
+  $( "#tutorial" ).remove();
+  chrome.storage.sync.set({
+    tutorialViewed: true,
+  });
+});
+
+  }
 }
 
 function updateDateTimeHTML(timeEnabled, dateEnabled)
