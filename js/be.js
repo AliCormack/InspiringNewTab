@@ -132,7 +132,16 @@
 	};
 
 	be.project.search = function(searchTerm, sorting, getPage, callback) {
-		var param = {q: searchTerm, sort:sorting, page:getPage};
+		var param
+		if(searchTerm != '')
+		{
+			param = {q: searchTerm, sort:sorting, page:getPage};
+		}
+		else
+		{
+			param = {sort:sorting, page:getPage};
+		}
+		
 		var ext = "projects";
 		return get(ext, param, callback);
 	};

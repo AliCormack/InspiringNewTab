@@ -5,16 +5,12 @@ var searchTerm = '';
 var sortMethod = '';
 var contentLoads = 1;
 
-chrome.storage.sync.get(['searchTerm', 'sortMethod'], function(items) {
-    if(typeof items.searchTerm !== 'undefined') searchTerm = items.searchTerm;
-    if(typeof items.sortMethod !== 'undefined') sortMethod = items.sortMethod;
-    getImages();
-})
-
 function getImages()
 {
   // Using callbacks
   be.project.search(searchTerm, sortMethod, contentLoads, function success(results) {
+
+    
 
     var newHTML = [];
     for (var i = 0; i < results.projects.length; i++) {
@@ -65,6 +61,7 @@ $(document).ready(function()
   $( "#settings-button" ).click(function()
   {
     $("#settings-window").toggle();
+    $( ".settings-btn" ).toggleClass('menu-open');
   });
 
   // Infinite Scroll

@@ -22,7 +22,6 @@ function save_options()
 // Restores select box and checkbox state using the preferences
 // stored in chrome.storage.
 function restore_options() {
-  // Use default value color = 'red' and likesColor = true.
   chrome.storage.sync.get({
     searchTerm: '',
     sortMethod: 'featured_date',
@@ -33,8 +32,12 @@ function restore_options() {
     document.getElementById('sort_method').value = items.sortMethod;
     document.getElementById('time_enabled').checked = items.timeEnabled;
     document.getElementById('date_enabled').checked = items.dateEnabled;
-
     updateDateTimeHTML(items.timeEnabled, items.dateEnabled);
+
+    searchTerm = items.searchTerm;
+    sortMethod = items.sortMethod
+
+    getImages();
   });
 }
 
