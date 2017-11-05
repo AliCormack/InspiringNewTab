@@ -1,56 +1,82 @@
 
-  be('Gs6WkD85SxnL9f6MbHjjr30udF8iZAdy')
+be('Gs6WkD85SxnL9f6MbHjjr30udF8iZAdy')
+
+// Static Values
+var s_initialNumImagesToLoad = 50;
 
 var searchTerm = '';
 var sortMethod = '';
-var contentLoads = 1;
+var behanceContentLoads = 1;
 
-function clearImages()
+var cells;
+
+function Init()
 {
-  $(".grid").empty();
+  cells = {};
 }
 
-function getImages()
+Init();
+
+function Cell(id, imgUrl, linkUrl, adult, date, views)
 {
-  // Using callbacks
-  be.project.search(searchTerm, sortMethod, contentLoads, function success(results) {    
+  this.id = id;
+  this.imgUrl = imgUrl;
+  this.linkUrl = linkUrl;
+  this.adult = adult;
 
-    var newHTML = [];
-    for (var i = 0; i < results.projects.length; i++) {
+  // Sorting
+  this.date = date;
+  this.views = views;
 
-        var project = results.projects[i];
+  this.drawn = false;
+}
 
-        newHTML.push(' <div class = "cell"> <a href = '+project.url+'> <img data-src=' + project.covers['404'] + '></a></img></div>');
-    }
-    $(".grid").append(newHTML.join(""));
+function GetImages()
+{
+  
+  GetImagesArtStation(s_initialNumImagesToLoad);
+  // getImagesBehance();
 
-    $(".scroll").remove();    
-    var scrollToLoadCell = '<div class = "cell scroll"><span>&#9679; &#9679; &#9679;</span></div>';
-    $(".grid").append(scrollToLoadCell);
 
-    fadeIn();
 
-    var div = $(".grid").height();
-    var win = $(window).height();
-
-    if (div < win ) {
-      contentLoads++;
-      getImages();
-    }
-
-  });
-
- 
   
 }
 
-function loadNewContent()
+function DrawGrid()
 {
-  contentLoads++;
-  getImages();
+  for (var cellId in cells)
+  {
+    var cell = cells[cellId];
+
+    if(cell.drawn == false)
+    {
+      cell.drawn = true;
+
+      var cellHTML = '<div class = "cell"> <a href = '+cell.linkUrl+'> <img data-src=' + cell.imgUrl + '></a></img></div>';
+      $(".grid").append(cellHTML);
+      // $(".scroll").remove();    
+      // var scrollToLoadCell = '<div class = "cell scroll"><span>&#9679; &#9679; &#9679;</span></div>';
+      // $(".grid").append(scrollToLoadCell);
+
+      FadeIn();
+      // IsScreenFilled();
+    }
+   
+  }
 }
 
-function fadeIn()
+function IsScreenFilled()
+{
+  var gridHeight    = $(".grid").height();
+  var windowHeight  = $(window).height();
+
+  if (gridHeight < windowHeight ) 
+  {    
+    GetImages();
+  }
+}
+
+function FadeIn()
 {
   [].forEach.call(document.querySelectorAll('img[data-src]'), function(img) {
     img.setAttribute('src', img.getAttribute('data-src'));
@@ -59,6 +85,89 @@ function fadeIn()
     };
   });
 }
+
+function GetImagesArtStation(numberToGet)
+{  
+    // https://www.artstation.com/random_project.json?&medium=digital2d&category=concept_art
+    // Params
+    // &randomize=true
+    // &page=1
+    // &category=concept_art | animation | archviz | architecture | characters
+    // &medium=digital2d | digital3d | traditional2d | traditional3d
+    // &sorting=trending | latest | picks
+    // &direction=desc 
+    // &q=search_term
+    // &order=likes_count | published
+    // &show_pro_first = true
+
+    $.getJSON('https://www.artstation.com/projects.json', function(data) {
+        
+      var results = data.data;
+
+      for (var i = 0; i < results.length; i++) 
+      {
+        var result = results[i];
+
+        var cell = new Cell(
+          result.id, 
+          result.cover.thumb_url, 
+          result.permalink, 
+          result.adult_content, 
+          result.published_at, 
+          result.views_count);
+
+        AddCell(cell);
+      }
+    
+      DrawGrid();
+
+    }); 
+  
+}
+
+function AddCell(cell)
+{
+  // Only add if it doesn't exist
+  if(cells[cell.id] == undefined)
+  {
+    cells[cell.id] = cell;
+  }
+}
+
+function ClearGrid()
+{
+  $(".grid").empty();
+}
+
+function GetImagesBehance()
+{
+  // Using callbacks
+  be.project.search(searchTerm, sortMethod, behanceContentLoads, function success(results) {    
+    
+    for (var i = 0; i < results.projects.length; i++) {
+
+        var project = results.projects[i];
+        var cell = new Cell('1', project.covers['404'], project.url);
+        AddCell(cell);        
+    }   
+
+    DrawGrid();
+    
+    behanceContentLoads++;
+
+  });
+
+ 
+  
+}
+
+// function loadNewContent()
+// {
+//   behanceContentLoads++;
+//   GetImages();
+// }
+
+
 
 $(document).ready(function()
 {
@@ -77,18 +186,20 @@ $(document).ready(function()
         });
         searchTerm = term;
 
-        clearImages();
-        getImages();
+        ClearGrid();
+        GetImages();
       }
   });
 
   // Infinite Scroll
 
-  $(window).on('scroll', function() {
-      if($(window).scrollTop() + $(window).height() >= $('body')[0].scrollHeight) {
-        loadNewContent();
-      }
-  })
+  // $(window).on('scroll', function() {
+  //     if($(window).scrollTop() + $(window).height() >= $('body')[0].scrollHeight) {
+  //       loadNewContent();
+  //     }
+  // })
+
+  // Time
 
   function checkTime(i) {
     if (i < 10) {

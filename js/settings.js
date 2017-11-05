@@ -38,7 +38,7 @@ function restore_options() {
     searchTerm = items.searchTerm;
     sortMethod = items.sortMethod
 
-    getImages();
+    GetImages();
 
     addTutorialIfRequired(items.tutorialViewed);
   });
@@ -54,7 +54,7 @@ function addTutorialIfRequired(tutorialViewed)
       "<img width=200 height=200 src='img/icon/Icon-Transparent-512.png'></img>"+
       "<h1>Inspire</h1>"+
       "<h2>New Tab Gallery</h2>"+
-      "<h4>Beta v0.0.0.4</h4>"+
+      "<h4>Beta v0.0.0.8</h4>"+
       "<br>"+
       "<p>We hope you enjoy the gorgeous art and design fresh daily from around the web every day! </p>"+
       "<br>"+
