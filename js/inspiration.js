@@ -1,19 +1,6 @@
 
 be('Gs6WkD85SxnL9f6MbHjjr30udF8iZAdy')
 
-// Static Values
-var s_initialNumImagesToLoad = 50;
-var s_imagesToDisplayPerSource = 48; // Match the amount of images grabbed by behance to evenly shuffle them
-
-var sortMethod = '';
-var contentLoads; // Index this to load new content
-
-var artStationPreloadedCells; // Keep some cells preloaded if we don't want to display them all immediately
-var behancePreloadedCells;
-var displayCells;
-
-var loadingSources;
-
 //  Settings
 var SORTING = 
 {
@@ -22,9 +9,15 @@ var SORTING =
   FEATURED_DATE : 2
 }
 
-var artStationEnabled = true;
-var behanceEnabled = true;
-var sorting = SORTING.RANDOM;
+// Static Values
+var s_initialNumImagesToLoad = 50;
+var s_imagesToDisplayPerSource = 30; // Match the amount of images grabbed by behance to evenly shuffle them
+
+var contentLoads; // Index this to load new content
+var artStationPreloadedCells; // Keep some cells preloaded if we don't want to display them all immediately
+var behancePreloadedCells;
+var displayCells;
+var loadingSources;
 
 function Init()
 {
@@ -72,6 +65,7 @@ function GetImages()
 
 function DrawGrid()
 {
+
   for (var i = 0; i <displayCells.length; i++)
   {
     var cell = displayCells[i];
@@ -114,8 +108,6 @@ function FadeIn()
   });
 }
 
-var searchTerm2 = 'landscape';
-
 function GetImagesArtStation(numberToGet)
 {  
   console.log(artStationPreloadedCells.length + ' Cells Precached For ArtStation');
@@ -134,11 +126,23 @@ function GetImagesArtStation(numberToGet)
     // &order=likes_count | published
     // &show_pro_first = true
 
-    var artStationURL = 'https://www.artstation.com/projects.json?randomize=true';
+    var artStationURL;    
+
+    if(searchTerm)
+    {
+      artStationURL = 'https://www.artstation.com/search/projects.json?direction=desc&show_pro_first=true';
+      artStationURL += '&q='+searchTerm;
+    }
+    else
+    {
+      artStationURL = 'https://www.artstation.com/projects.json?direction=desc&show_pro_first=true';
+    }
 
     artStationURL += '&page='+contentLoads;
-    // artStationURL += '&sorting=picks';
-    artStationURL += '&q='+searchTerm2;
+    // artStationURL += '&medium=digital3d';
+    artStationURL += '&order=published_at';
+
+    console.log(artStationURL);
 
     $.getJSON(artStationURL, function(data) {
         
@@ -167,6 +171,7 @@ function GetImagesArtStation(numberToGet)
 function FinishedLoadingSource()
 {
   loadingSources--;
+  console.log('Loading : '+loadingSources);
   DrawGridIfLoaded();
 }
 
@@ -203,29 +208,40 @@ function GetImagesBehance()
 
   if(behancePreloadedCells.length < s_imagesToDisplayPerSource)
   {
+    console.log(sortMethod);
+
     // Using callbacks
-    be.project.search(searchTerm2, sortMethod, contentLoads, function success(results) {    
+    be.project.search(searchTerm, 'featured_date', contentLoads, function success(results) {    
       
       console.log(results.projects.length + ' Behance Results');
+      console.log(results.projects);
 
-      for (var i = 0; i < results.projects.length; i++) {
 
-          var project = results.projects[i];
-
-          // console.log(project);
-
-          var imgURL = project.covers['404'] != undefined ? project.covers['404'] : project.covers['original'];
-
+      for (var b = 0; b < results.projects.length; b++) 
+      {
+          var project = results.projects[b];
+          var imgURL = project.covers['404'] != undefined ? project.covers['404'] : project.covers['original'];          
+          var featuredOn = project.features != undefined ? project.features[0].featured_on : project.published_on;
+         
+         try
+         {
           var cell = new Cell(
             "Behance"+project.id, 
             imgURL, 
             project.url, 
             project.mature_content, 
             project.published_on, 
-            project.features[0].featured_on,
+            featuredOn,
             project.stats.views);
+        }
 
-          behancePreloadedCells.push(cell);        
+        catch (e)
+        {
+          console.log(e);
+        }
+
+        behancePreloadedCells.push(cell);            
+         
       }   
 
       console.log(behancePreloadedCells.length + ' Cells Precached For Behance After');
@@ -290,32 +306,6 @@ function ClearGrid()
   $(".grid").empty();
 }
 
-
-
-
-
-$(document).ready(function()
-{
-  $( "#settings-button" ).click(function()
-  {
-    $("#settings-window").toggle();
-    $( ".settings-btn" ).toggleClass('menu-open');
-  });
-
-  $("#search_term").on('keyup', function (e) {
-      if (e.keyCode == 13) {
-
-        var term = document.getElementById('search_term').value;      
-        chrome.storage.sync.set({
-          searchTerm: term
-        });
-        searchTerm = term;
-
-        // ClearGrid();
-        GetImages();
-      }
-  });
-
   // Infinite Scroll
 
   // $(window).on('scroll', function() {
@@ -325,6 +315,9 @@ $(document).ready(function()
   // })
 
   // Time
+
+  $(document).ready(function()
+  {
 
   function checkTime(i) {
     if (i < 10) {

@@ -1,46 +1,79 @@
+// Settings
+
+var artStationEnabled = false;
+var behanceEnabled = true;
+var sorting = SORTING.RANDOM;
+var sortMethod = '';
+var searchTerm;
+var timeEnabled = true;
+var dateEnabled = true;
+
+// Defaults
+
+var defaultSearchTerm = '';
+var defaultSearchMethod = '';
+var defaultTimeEnabled = true;
+var defaultDateEnabled = true;
+var defaultTutorialViewed = false;
+
+// HTML
+
+var termElement;
+var sortElement;
+var timeElement;
+var dateElement;
+
 // Saves options to chrome.storage.sync.
 function save_options()
 {
-  // var color = document.getElementById('color').value;
-  // var likesColor = document.getElementById('like').checked;
+  UpdateHTML();
 
-  var term = document.getElementById('search_term').value;
-  var sort = document.getElementById('sort_method').value;
-  var time = document.getElementById('time_enabled').checked;
-  var date = document.getElementById('date_enabled').checked;
+  searchTerm = termElement.value;
+  sortMethod = sortElement.value;
+  timeEnabled = timeElement.value;
+  dateEnabled = dateElement.value; 
 
-  updateDateTimeHTML(time, date);
+  console.log(timeElement.value);
 
   chrome.storage.sync.set({
-    searchTerm: term,
-    sortMethod : sort,
-    timeEnabled:time,
-    dateEnabled:date
+    searchTerm: searchTerm,
+    sortMethod : sortMethod,
+    timeEnabled: timeEnabled,
+    dateEnabled: dateEnabled
   });
+
+  updateDateTimeHTML();
+
 }
 
 // Restores select box and checkbox state using the preferences
 // stored in chrome.storage.
-function restore_options() {
-  chrome.storage.sync.get({
-    searchTerm: '',
-    sortMethod: 'featured_date',
-    timeEnabled:true,
-    dateEnabled:true,
-    tutorialViewed:false
-  }, function(items) {
-    document.getElementById('search_term').value = items.searchTerm;
-    document.getElementById('sort_method').value = items.sortMethod;
-    document.getElementById('time_enabled').checked = items.timeEnabled;
-    document.getElementById('date_enabled').checked = items.dateEnabled;
-    updateDateTimeHTML(items.timeEnabled, items.dateEnabled);
-
+function restore_options() 
+{
+  chrome.storage.sync.get(
+    {
+    searchTerm: defaultSearchTerm,
+    sortMethod: defaultSearchMethod,
+    timeEnabled: defaultTimeEnabled,
+    dateEnabled: defaultDateEnabled,
+    tutorialViewed: defaultTutorialViewed
+  }, function(items) 
+  {
+    
     searchTerm = items.searchTerm;
     sortMethod = items.sortMethod
+    timeEnabled = items.timeEnabled;
+    dateEnabled = items.dateEnabled;
+   
+    console.log(items);
 
-    GetImages();
+    termElement.value = searchTerm;
+    sortElement.value = sortMethod;
+    timeElement.checked = timeEnabled;
+    dateElement.checked = dateEnabled;       
 
-    addTutorialIfRequired(items.tutorialViewed);
+    updateDateTimeHTML();
+    // addTutorialIfRequired(items.tutorialViewed);
   });
 }
 
@@ -77,6 +110,8 @@ $( "#close-tutorial-btn" ).click(function()
 
 function updateDateTimeHTML(timeEnabled, dateEnabled)
 {
+  // console.log(timeEnabled);
+
   if(timeEnabled == false)
   {
     $('#time').hide();
@@ -104,9 +139,19 @@ function updateDateTimeHTML(timeEnabled, dateEnabled)
   
 }
 
-$(document).ready(function()
+function UpdateHTML()
 {
-  restore_options();
+  termElement = document.getElementById('search_term');
+  sortElement = document.getElementById('sort_method');
+  timeElement = document.getElementById('time_enabled');
+  dateElement = document.getElementById('date_enabled');
+}
+
+$(document).ready(function()
+{  
+  UpdateHTML();
+  
+
   $('#search_term').on('input', function() {
       save_options();
   });
@@ -119,4 +164,28 @@ $(document).ready(function()
   $('#date_enabled').change( function() {
     save_options();
   });
+
+  $( "#settings-button" ).click(function()
+  {
+    $("#settings-window").toggle();
+    $( ".settings-btn" ).toggleClass('menu-open');
+  });
+
+  $("#search_term").on('keyup', function (e) {
+      if (e.keyCode == 13) {
+
+        var term = document.getElementById('search_term').value;      
+        chrome.storage.sync.set({
+          searchTerm: term
+        });
+        searchTerm = term;
+
+        // ClearGrid();
+        GetImages();
+      }
+  });
+
+  restore_options();
+
 });
+
