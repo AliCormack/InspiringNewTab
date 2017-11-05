@@ -3,21 +3,39 @@ be('Gs6WkD85SxnL9f6MbHjjr30udF8iZAdy')
 
 // Static Values
 var s_initialNumImagesToLoad = 50;
+var s_imagesToDisplayPerSource = 48; // Match the amount of images grabbed by behance to evenly shuffle them
 
-var searchTerm = '';
 var sortMethod = '';
-var behanceContentLoads = 1;
+var contentLoads; // Index this to load new content
 
-var cells;
+var artStationPreloadedCells; // Keep some cells preloaded if we don't want to display them all immediately
+var behancePreloadedCells;
+var displayCells;
+
+var loadingSources;
+
+//  Settings
+var SORTING = 
+{
+  RANDOM: 0,
+  VIEWS: 1,
+  FEATURED_DATE : 2
+}
+
+var artStationEnabled = true;
+var behanceEnabled = true;
+var sorting = SORTING.RANDOM;
 
 function Init()
 {
-  cells = {};
+  contentLoads = 1;
+  artStationPreloadedCells = [];
+  behancePreloadedCells = [];
 }
 
 Init();
 
-function Cell(id, imgUrl, linkUrl, adult, date, views)
+function Cell(id, imgUrl, linkUrl, adult, date, featuredDate, views)
 {
   this.id = id;
   this.imgUrl = imgUrl;
@@ -25,7 +43,8 @@ function Cell(id, imgUrl, linkUrl, adult, date, views)
   this.adult = adult;
 
   // Sorting
-  this.date = date;
+  this.date = date;  
+  this.featuredDate = featuredDate;
   this.views = views;
 
   this.drawn = false;
@@ -33,26 +52,35 @@ function Cell(id, imgUrl, linkUrl, adult, date, views)
 
 function GetImages()
 {
-  
-  GetImagesArtStation(s_initialNumImagesToLoad);
-  // getImagesBehance();
+  loadingSources = artStationEnabled + behanceEnabled;
 
+  console.log('GetImages : Page '+contentLoads+' From '+loadingSources+' Sources')
 
+  if(artStationEnabled)
+  {
+    GetImagesArtStation(s_initialNumImagesToLoad);
+  }
 
+  if(behanceEnabled)
+  {
+    GetImagesBehance();
+  }
+
+  contentLoads++;
   
 }
 
 function DrawGrid()
 {
-  for (var cellId in cells)
+  for (var i = 0; i <displayCells.length; i++)
   {
-    var cell = cells[cellId];
+    var cell = displayCells[i];
 
     if(cell.drawn == false)
     {
       cell.drawn = true;
 
-      var cellHTML = '<div class = "cell"> <a href = '+cell.linkUrl+'> <img data-src=' + cell.imgUrl + '></a></img></div>';
+      var cellHTML = '<div class = "cell"> <a href = '+cell.linkUrl+'> <img src=' + cell.imgUrl + '></a></img></div>';
       $(".grid").append(cellHTML);
       // $(".scroll").remove();    
       // var scrollToLoadCell = '<div class = "cell scroll"><span>&#9679; &#9679; &#9679;</span></div>';
@@ -86,8 +114,14 @@ function FadeIn()
   });
 }
 
+var searchTerm2 = 'landscape';
+
 function GetImagesArtStation(numberToGet)
 {  
+  console.log(artStationPreloadedCells.length + ' Cells Precached For ArtStation');
+
+  if(artStationPreloadedCells.length < s_imagesToDisplayPerSource)
+  {
     // https://www.artstation.com/random_project.json?&medium=digital2d&category=concept_art
     // Params
     // &randomize=true
@@ -100,37 +134,154 @@ function GetImagesArtStation(numberToGet)
     // &order=likes_count | published
     // &show_pro_first = true
 
-    $.getJSON('https://www.artstation.com/projects.json', function(data) {
+    var artStationURL = 'https://www.artstation.com/projects.json?randomize=true';
+
+    artStationURL += '&page='+contentLoads;
+    // artStationURL += '&sorting=picks';
+    artStationURL += '&q='+searchTerm2;
+
+    $.getJSON(artStationURL, function(data) {
         
       var results = data.data;
+
+      console.log(results.length + ' Art Station Results');
 
       for (var i = 0; i < results.length; i++) 
       {
         var result = results[i];
-
-        var cell = new Cell(
-          result.id, 
-          result.cover.thumb_url, 
-          result.permalink, 
-          result.adult_content, 
-          result.published_at, 
-          result.views_count);
-
-        AddCell(cell);
+        NewArtStationCell(artStationPreloadedCells, result); 
       }
-    
-      DrawGrid();
 
+      console.log(artStationPreloadedCells.length + ' Cells Precached For Art Station After');      
+    
+      FinishedLoadingSource();
+      
     }); 
-  
+  }  
+  else
+  {
+    FinishedLoadingSource();
+  }
 }
 
-function AddCell(cell)
+function FinishedLoadingSource()
 {
-  // Only add if it doesn't exist
-  if(cells[cell.id] == undefined)
+  loadingSources--;
+  DrawGridIfLoaded();
+}
+
+function NewArtStationCell(array, result)
+{
+  var cell = new Cell(
+    "ArtStation"+result.id, 
+    result.cover.thumb_url, 
+    result.permalink, 
+    result.adult_content, 
+    result.published_at, 
+    result.published_at, // No featured equivalent for ArtStation
+    result.views_count);
+
+    array.push(cell);
+}
+
+function GetImagesBehance()
+{
+  console.log(behancePreloadedCells.length + ' Cells Precached For Behance Before');
+
+  // q Free text query string.
+  // sort The order the results are returned in. Possible values: featured_date (default), appreciations, views, comments, published_date.
+  // timeLimits the search by time. Possible values: all (default), today, week, month.
+  // fieldLimits the search by creative field. Accepts a URL-encoded field name from the list of defined creative fields.
+  // countryLimits the search by a 2-letter FIPS country code.
+  // stateLimits the search by state or province name.
+  // cityLimits the search by city name.
+  // pageThe page number of the results, always starting with 1.
+  // tagsLimits the search by tags. Accepts one tag name or a pipe-separated list of tag names.
+  // color_hexLimit results to an RGB hex value (without #)
+  // color_rangeHow closely to match the requested color_hex, in color shades (default:20) [0-255]
+  // licenseFilter by creative license. Acronyms found here: http://creativecommons.org/licenses/
+
+  if(behancePreloadedCells.length < s_imagesToDisplayPerSource)
   {
-    cells[cell.id] = cell;
+    // Using callbacks
+    be.project.search(searchTerm2, sortMethod, contentLoads, function success(results) {    
+      
+      console.log(results.projects.length + ' Behance Results');
+
+      for (var i = 0; i < results.projects.length; i++) {
+
+          var project = results.projects[i];
+
+          // console.log(project);
+
+          var imgURL = project.covers['404'] != undefined ? project.covers['404'] : project.covers['original'];
+
+          var cell = new Cell(
+            "Behance"+project.id, 
+            imgURL, 
+            project.url, 
+            project.mature_content, 
+            project.published_on, 
+            project.features[0].featured_on,
+            project.stats.views);
+
+          behancePreloadedCells.push(cell);        
+      }   
+
+      console.log(behancePreloadedCells.length + ' Cells Precached For Behance After');
+
+      FinishedLoadingSource();
+
+    }); 
+  }  
+  else
+  {
+    FinishedLoadingSource();
+  }
+}
+
+function DrawGridIfLoaded()
+{
+  if(loadingSources == 0)
+  {
+    // Populate display cells with 48 from each array
+
+    var artStationCellsNum  = Math.min(artStationPreloadedCells.length, s_imagesToDisplayPerSource);
+    var behanceCellsNum     = Math.min(behancePreloadedCells.length, s_imagesToDisplayPerSource);
+
+    displayCells = artStationPreloadedCells.splice(0, artStationCellsNum);
+    displayCells = displayCells.concat(behancePreloadedCells.splice(0, behanceCellsNum));
+
+    SortCells();
+    DrawGrid();
+
+    console.log(behancePreloadedCells.length + ' Remaining Cells Precached For Behance After Draw');
+    console.log(artStationPreloadedCells.length + ' Remaining Cells Precached For ArtStation After Draw');
+  }
+}
+
+function SortCells()
+{
+  if(sorting == SORTING.RANDOM)
+  {
+    shuffle(displayCells);
+  }
+  else if(sorting == SORTING.VIEWS)
+  {
+    displayCells.sort(function(a, b) { 
+        return b.views - a.views;
+    })
+  }
+
+}
+
+function shuffle(a) {
+  var j, x, i;
+  for (i = a.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      x = a[i];
+      a[i] = a[j];
+      a[j] = x;
   }
 }
 
@@ -139,33 +290,7 @@ function ClearGrid()
   $(".grid").empty();
 }
 
-function GetImagesBehance()
-{
-  // Using callbacks
-  be.project.search(searchTerm, sortMethod, behanceContentLoads, function success(results) {    
-    
-    for (var i = 0; i < results.projects.length; i++) {
 
-        var project = results.projects[i];
-        var cell = new Cell('1', project.covers['404'], project.url);
-        AddCell(cell);        
-    }   
-
-    DrawGrid();
-    
-    behanceContentLoads++;
-
-  });
-
- 
-  
-}
-
-// function loadNewContent()
-// {
-//   behanceContentLoads++;
-//   GetImages();
-// }
 
 
 
@@ -186,7 +311,7 @@ $(document).ready(function()
         });
         searchTerm = term;
 
-        ClearGrid();
+        // ClearGrid();
         GetImages();
       }
   });
