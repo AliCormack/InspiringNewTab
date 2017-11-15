@@ -1,12 +1,14 @@
 // Settings
 
-var artStationEnabled = false;
-var behanceEnabled = true;
-var sorting = SORTING.RANDOM;
-var sortMethod = '';
 var searchTerm;
-var timeEnabled = true;
-var dateEnabled = true;
+var timeEnabled;
+var dateEnabled;
+var tutorialViewed;
+var artStationEnabled;
+var behanceEnabled;
+var totalOrdering;
+var behanceOrdering;
+var artStationOrdering;
 
 // Defaults
 
@@ -15,29 +17,32 @@ var defaultSearchMethod = '';
 var defaultTimeEnabled = true;
 var defaultDateEnabled = true;
 var defaultTutorialViewed = false;
+var defaultArtStationEnabled = false;
+var defaultBehanceEnabled = true;
+var defaultTotalOrdering = DISPLAY_ORDER.Random; // TODO THIS IS WRONG NEED THE VARIABLE NAME NOT THE STRING
+var defaultBehanceOrdering = BEHANCE_ORDER.featured_date;
+var defaultArtstationOrdering = ARTSTATION_SORTING.latest;
 
 // HTML
 
-var termElement;
-var sortElement;
-var timeElement;
-var dateElement;
+var behanceElement;
+var artStationElement;
+var searchTermElement;
+var displayOrderDropdownElement;
+var timeToggleElement;
+var dateToggleElement;
 
 // Saves options to chrome.storage.sync.
 function save_options()
 {
   UpdateHTML();
 
-  searchTerm = termElement.value;
-  sortMethod = sortElement.value;
-  timeEnabled = timeElement.value;
-  dateEnabled = dateElement.value; 
-
-  console.log(timeElement.value);
+  searchTerm = searchTermElement.value;
+  timeEnabled = timeToggleElement.value;
+  dateEnabled = dateToggleElement.value; 
 
   chrome.storage.sync.set({
     searchTerm: searchTerm,
-    sortMethod : sortMethod,
     timeEnabled: timeEnabled,
     dateEnabled: dateEnabled
   });
@@ -50,30 +55,45 @@ function save_options()
 // stored in chrome.storage.
 function restore_options() 
 {
+  chrome.storage.sync.clear();
+
   chrome.storage.sync.get(
     {
     searchTerm: defaultSearchTerm,
-    sortMethod: defaultSearchMethod,
     timeEnabled: defaultTimeEnabled,
     dateEnabled: defaultDateEnabled,
-    tutorialViewed: defaultTutorialViewed
+    tutorialViewed: defaultTutorialViewed,
+    artStationEnabled : defaultArtStationEnabled,
+    behanceEnabled : defaultBehanceEnabled,
+    sorting : defaultTotalOrdering,
+    behanceOrdering : defaultBehanceOrdering,
+    artStationOrdering : defaultArtstationOrdering
   }, function(items) 
   {
     
     searchTerm = items.searchTerm;
-    sortMethod = items.sortMethod
     timeEnabled = items.timeEnabled;
     dateEnabled = items.dateEnabled;
+    tutorialViewed = items.tutorialViewed;
+    artStationEnabled = items.artStationEnabled;
+    behanceEnabled = items.behanceEnabled;
+    totalOrdering = items.sorting;
+    behanceOrdering = items.behanceOrdering;
+    artStationOrdering = items.artStationOrdering;
    
     console.log(items);
 
-    termElement.value = searchTerm;
-    sortElement.value = sortMethod;
-    timeElement.checked = timeEnabled;
-    dateElement.checked = dateEnabled;       
+    behanceElement.checked    = behanceEnabled;
+    artStationElement.checked = artStationEnabled;
+    displayOrderDropdownElement       = totalOrdering;
+    searchTermElement.value   = searchTerm;
+    timeToggleElement.checked = timeEnabled;
+    dateToggleElement.checked = dateEnabled;       
 
     updateDateTimeHTML();
     // addTutorialIfRequired(items.tutorialViewed);
+
+    GetImages();
   });
 }
 
@@ -139,12 +159,30 @@ function updateDateTimeHTML(timeEnabled, dateEnabled)
   
 }
 
+var s_SearchTermID = 'search_term';
+var s_DisplayOrderID = 'display_order';
+var s_BehanceOrderID = 'behance_order';
+var s_ArtStationOrderID = 'artstation_order';
+
 function UpdateHTML()
 {
-  termElement = document.getElementById('search_term');
-  sortElement = document.getElementById('sort_method');
-  timeElement = document.getElementById('time_enabled');
-  dateElement = document.getElementById('date_enabled');
+  behanceElement              = document.getElementById('behance_enabled');
+  artStationElement           = document.getElementById('artstation_enabled');
+  searchTermElement           = document.getElementById(s_SearchTermID);
+  displayOrderDropdownElement = document.getElementById(s_DisplayOrderID);
+  timeToggleElement           = document.getElementById('time_enabled');
+  dateToggleElement           = document.getElementById('date_enabled');
+}
+
+function AddSearchTermDropdownElements(enum_var, dropdownElementId)
+{
+  for (const prop in enum_var) {
+    $('#'+dropdownElementId).append($('<option>', {
+      value: `${prop}`,
+      text: `${enum_var[prop]}`
+    }));
+  }
+
 }
 
 $(document).ready(function()
@@ -152,10 +190,10 @@ $(document).ready(function()
   UpdateHTML();
   
 
-  $('#search_term').on('input', function() {
+  $('#'+s_SearchTermID).on('input', function() {
       save_options();
   });
-  $('#sort_method').on('input', function() {
+  $('#'+s_DisplayOrderID).on('input', function() {
     save_options();
   });
   $('#time_enabled').change( function() {
@@ -184,6 +222,10 @@ $(document).ready(function()
         GetImages();
       }
   });
+
+  AddSearchTermDropdownElements(DISPLAY_ORDER, s_DisplayOrderID);
+  AddSearchTermDropdownElements(BEHANCE_ORDER, s_BehanceOrderID);
+  AddSearchTermDropdownElements(ARTSTATION_SORTING, s_ArtStationOrderID);
 
   restore_options();
 

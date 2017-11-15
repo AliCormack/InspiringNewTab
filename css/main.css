@@ -54,7 +54,7 @@ body {
   border-radius: 0 0 7px 7px !important; }
 
 .settings-btn {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.75);
   padding: 10px;
   border-radius: 7px;
   position: fixed;
@@ -74,7 +74,7 @@ body {
   bottom: 45px;
   display: none;
   width: 250px;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.75);
   border-radius: 7px 7px 0 7px;
   color: white;
   padding: 20px;

@@ -1,18 +1,35 @@
 
 be('Gs6WkD85SxnL9f6MbHjjr30udF8iZAdy')
 
-//  Settings
-var SORTING = 
+//  Setting Enums
+var DISPLAY_ORDER = 
 {
-  RANDOM: 0,
-  VIEWS: 1,
-  FEATURED_DATE : 2
+  Random: "Random",
+  Views: "Views",
+  Featured_Date : "Featured Date"
 }
+
+var BEHANCE_ORDER = 
+{
+  featured_date: "Featured Date",
+  appreciations: "Appreciations",
+  views : "Views"
+}
+
+var ARTSTATION_SORTING = 
+{
+  trending: "Trending",
+  latest: "Latest",
+  picks : "Picks"
+}
+
+
 
 // Static Values
 var s_initialNumImagesToLoad = 50;
-var s_imagesToDisplayPerSource = 30; // Match the amount of images grabbed by behance to evenly shuffle them
+var s_maxImagesToDisplay = 60;
 
+var imagesToDisplayPerSource; // Match the amount of images grabbed by behance to evenly shuffle them
 var contentLoads; // Index this to load new content
 var artStationPreloadedCells; // Keep some cells preloaded if we don't want to display them all immediately
 var behancePreloadedCells;
@@ -46,6 +63,8 @@ function Cell(id, imgUrl, linkUrl, adult, date, featuredDate, views)
 function GetImages()
 {
   loadingSources = artStationEnabled + behanceEnabled;
+
+  imagesToDisplayPerSource = s_maxImagesToDisplay / loadingSources;
 
   console.log('GetImages : Page '+contentLoads+' From '+loadingSources+' Sources')
 
@@ -112,7 +131,7 @@ function GetImagesArtStation(numberToGet)
 {  
   console.log(artStationPreloadedCells.length + ' Cells Precached For ArtStation');
 
-  if(artStationPreloadedCells.length < s_imagesToDisplayPerSource)
+  if(artStationPreloadedCells.length < imagesToDisplayPerSource)
   {
     // https://www.artstation.com/random_project.json?&medium=digital2d&category=concept_art
     // Params
@@ -136,11 +155,12 @@ function GetImagesArtStation(numberToGet)
     else
     {
       artStationURL = 'https://www.artstation.com/projects.json?direction=desc&show_pro_first=true';
+      // artStationURL += 
     }
 
     artStationURL += '&page='+contentLoads;
     // artStationURL += '&medium=digital3d';
-    artStationURL += '&order=published_at';
+    // artStationURL += '&order=published_at';
 
     console.log(artStationURL);
 
@@ -206,12 +226,10 @@ function GetImagesBehance()
   // color_rangeHow closely to match the requested color_hex, in color shades (default:20) [0-255]
   // licenseFilter by creative license. Acronyms found here: http://creativecommons.org/licenses/
 
-  if(behancePreloadedCells.length < s_imagesToDisplayPerSource)
+  if(behancePreloadedCells.length < imagesToDisplayPerSource)
   {
-    console.log(sortMethod);
-
     // Using callbacks
-    be.project.search(searchTerm, 'featured_date', contentLoads, function success(results) {    
+    be.project.search(searchTerm, behanceOrdering, contentLoads, function success(results) {    
       
       console.log(results.projects.length + ' Behance Results');
       console.log(results.projects);
@@ -262,8 +280,8 @@ function DrawGridIfLoaded()
   {
     // Populate display cells with 48 from each array
 
-    var artStationCellsNum  = Math.min(artStationPreloadedCells.length, s_imagesToDisplayPerSource);
-    var behanceCellsNum     = Math.min(behancePreloadedCells.length, s_imagesToDisplayPerSource);
+    var artStationCellsNum  = Math.min(artStationPreloadedCells.length, imagesToDisplayPerSource);
+    var behanceCellsNum     = Math.min(behancePreloadedCells.length, imagesToDisplayPerSource);
 
     displayCells = artStationPreloadedCells.splice(0, artStationCellsNum);
     displayCells = displayCells.concat(behancePreloadedCells.splice(0, behanceCellsNum));
@@ -278,11 +296,11 @@ function DrawGridIfLoaded()
 
 function SortCells()
 {
-  if(sorting == SORTING.RANDOM)
+  if(totalOrdering == DISPLAY_ORDER.Random)
   {
     shuffle(displayCells);
   }
-  else if(sorting == SORTING.VIEWS)
+  else if(totalOrdering == DISPLAY_ORDER.Views)
   {
     displayCells.sort(function(a, b) { 
         return b.views - a.views;
