@@ -4,7 +4,7 @@
   "name": "Inspire Gallery New Tab",
   "short_name": "Inspire Gallery",
   "description": "Get inspired with every new tab. Displays a cutomisable gallery of the best current work from around the net.",
-  "version": "0.0.0.8",
+  "version": "0.0.1",
    "icons": { 
       "16": "img/icon/icon16.png",
       "32": "img/icon/icon32.png",

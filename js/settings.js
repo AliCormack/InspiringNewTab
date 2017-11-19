@@ -112,7 +112,7 @@ function restore_options()
     searchTerm = items.searchTerm;
     timeEnabled = items.timeEnabled;
     dateEnabled = items.dateEnabled;
-    tutorialViewed = items.tutorialViewed;
+    
     artStationEnabled = items.artStationEnabled;
     behanceEnabled = items.behanceEnabled;
     totalOrdering = items.totalOrdering;
@@ -120,6 +120,8 @@ function restore_options()
     artStationMedium = items.artStationMedium;
     artStationCategory = items.artStationCategory;
     artStationOrdering = items.artStationOrdering;
+
+    tutorialViewed = false;
    
     console.log(items);
 
@@ -137,7 +139,7 @@ function restore_options()
     artstationOrderDropdownElement.value = artStationOrdering;
 
     updateDateTimeHTML();
-    // addTutorialIfRequired(items.tutorialViewed);
+    addTutorialIfRequired(tutorialViewed);
 
     GetImages();
   });
@@ -153,12 +155,12 @@ function addTutorialIfRequired(tutorialViewed)
       "<img width=200 height=200 src='img/icon/Icon-Transparent-512.png'></img>"+
       "<h1>Inspire</h1>"+
       "<h2>New Tab Gallery</h2>"+
-      "<h4>Beta v0.0.0.8</h4>"+
+      "<h4>Beta v0.0.1</h4>"+
       "<br>"+
-      "<p>We hope you enjoy the gorgeous art and design fresh daily from around the web every day! </p>"+
+      "<p>Inspire sources its content from both <a href='https://www.behance.net/'>Behance.net</a> and <a href='https://www.artstation.com/'>ArtStation.com</a>. We hope you enjoy the gorgeous art and design fresh daily from around the web! </p>"+
       "<br>"+
-      "<p>Using the preferences panel in the bottom right you can configure the page to your interests. Simply enter a search term to see related artwork. You can also change the sorting of images, e.g. by date or views.</p>"+
-      "<br>"+
+      "<p>You can edit these image sources to your liking, and find many other customisation options via the preferences panel in the bottom right, such as adding a search term and changing the display order of images. </p><br> "+
+       "<p>Enjoy, and please leave <a href='https://chrome.google.com/webstore/detail/inspire-gallery-new-tab/feldechheiacimdajbkleojednhpophc'>feedback</a> if you have any!</p><br>"+
       "<button id='close-tutorial-btn' type='button'>Thanks, got it!</button>"+
    "</div>"+
 "</div>");

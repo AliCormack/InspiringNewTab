@@ -22,6 +22,9 @@ body {
     .tutorial .content p {
       font-size: 1.3em;
       margin: 0px 0 0px 0; }
+    .tutorial .content a {
+      color: #008ae7;
+      text-decoration: none; }
     .tutorial .content img {
       margin-bottom: -35px; }
     .tutorial .content h1 {

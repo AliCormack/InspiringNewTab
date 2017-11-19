@@ -55,6 +55,7 @@ var loadingSources;
 
 function Init()
 {
+  loadingSources = 0;
   contentLoads = 1;
   artStationPreloadedCells = [];
   behancePreloadedCells = [];
@@ -117,7 +118,7 @@ function DrawGrid()
       // $(".grid").append(scrollToLoadCell);
 
       FadeIn();
-      // IsScreenFilled();
+      IsScreenFilled();
     }
    
   }
@@ -130,7 +131,7 @@ function IsScreenFilled()
 
   if (gridHeight < windowHeight ) 
   {    
-    GetImages();
+    // GetImages();
   }
 }
 
@@ -355,11 +356,12 @@ function ClearGrid()
 
   // Infinite Scroll
 
-  // $(window).on('scroll', function() {
-  //     if($(window).scrollTop() + $(window).height() >= $('body')[0].scrollHeight) {
-  //       loadNewContent();
-  //     }
-  // })
+  $(window).on('scroll', function() {
+      if($(window).scrollTop() + $(window).height() >= $('body')[0].scrollHeight-20) {
+        console.log('BOTTOM REACHED');
+        GetImages();
+      }
+  })
 
   // Time
 
