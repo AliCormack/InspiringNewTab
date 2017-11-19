@@ -17,11 +17,13 @@ var defaultSearchMethod = '';
 var defaultTimeEnabled = true;
 var defaultDateEnabled = true;
 var defaultTutorialViewed = false;
-var defaultArtStationEnabled = false;
+var defaultArtStationEnabled = true;
 var defaultBehanceEnabled = true;
-var defaultTotalOrdering = DISPLAY_ORDER.Random; // TODO THIS IS WRONG NEED THE VARIABLE NAME NOT THE STRING
-var defaultBehanceOrdering = BEHANCE_ORDER.featured_date;
-var defaultArtstationOrdering = ARTSTATION_SORTING.latest;
+var defaultTotalOrdering = 'random'; // TODO THIS IS WRONG NEED THE VARIABLE NAME NOT THE STRING
+var defaultBehanceOrdering = 'featured_date';
+var defaultArtstationMedium = 'all';
+var defaultArtstationCategory = 'all';
+var defaultArtstationOrdering = 'picks';
 
 // HTML
 
@@ -29,6 +31,13 @@ var behanceElement;
 var artStationElement;
 var searchTermElement;
 var displayOrderDropdownElement;
+
+var behanceOrderDropdownElement;
+
+var artstationMediumDropdownElement;
+var artstationCategoryDropdownElement;
+var artstationOrderDropdownElement;
+
 var timeToggleElement;
 var dateToggleElement;
 
@@ -37,25 +46,52 @@ function save_options()
 {
   UpdateHTML();
 
+  artStationEnabled = artStationElement.checked;
+  behanceEnabled = behanceElement.checked;
   searchTerm = searchTermElement.value;
-  timeEnabled = timeToggleElement.value;
-  dateEnabled = dateToggleElement.value; 
+  totalOrdering = displayOrderDropdownElement.value;
+
+  behanceOrdering = behanceOrderDropdownElement.value;
+
+  artStationMedium = artstationMediumDropdownElement.value;
+  artStationCategory = artstationCategoryDropdownElement.value;
+  artStationOrdering = artstationOrderDropdownElement.value;
+  
+  timeEnabled = timeToggleElement.checked;
+  dateEnabled = dateToggleElement.checked;  
+  
+  console.log(displayOrderDropdownElement.value);
 
   chrome.storage.sync.set({
     searchTerm: searchTerm,
     timeEnabled: timeEnabled,
-    dateEnabled: dateEnabled
+    dateEnabled: dateEnabled,
+    tutorialViewed: false,
+    artStationEnabled : artStationEnabled,
+    behanceEnabled : behanceEnabled,
+    totalOrdering : totalOrdering,
+    behanceOrdering : behanceOrdering,
+    artStationMedium : artStationMedium,
+    artStationCategory : artStationCategory,
+    artStationOrdering : artStationOrdering
   });
 
   updateDateTimeHTML();
 
 }
 
+function refresh()
+{
+  Init();
+  ClearGrid();
+  GetImages();
+}
+
 // Restores select box and checkbox state using the preferences
 // stored in chrome.storage.
 function restore_options() 
 {
-  chrome.storage.sync.clear();
+  // chrome.storage.sync.clear();
 
   chrome.storage.sync.get(
     {
@@ -65,8 +101,10 @@ function restore_options()
     tutorialViewed: defaultTutorialViewed,
     artStationEnabled : defaultArtStationEnabled,
     behanceEnabled : defaultBehanceEnabled,
-    sorting : defaultTotalOrdering,
+    totalOrdering : defaultTotalOrdering,
     behanceOrdering : defaultBehanceOrdering,
+    artStationMedium : defaultArtstationMedium,
+    artStationCategory : defaultArtstationCategory,
     artStationOrdering : defaultArtstationOrdering
   }, function(items) 
   {
@@ -77,18 +115,26 @@ function restore_options()
     tutorialViewed = items.tutorialViewed;
     artStationEnabled = items.artStationEnabled;
     behanceEnabled = items.behanceEnabled;
-    totalOrdering = items.sorting;
+    totalOrdering = items.totalOrdering;
     behanceOrdering = items.behanceOrdering;
+    artStationMedium = items.artStationMedium;
+    artStationCategory = items.artStationCategory;
     artStationOrdering = items.artStationOrdering;
    
     console.log(items);
 
     behanceElement.checked    = behanceEnabled;
     artStationElement.checked = artStationEnabled;
-    displayOrderDropdownElement       = totalOrdering;
+    displayOrderDropdownElement.value = totalOrdering;
     searchTermElement.value   = searchTerm;
     timeToggleElement.checked = timeEnabled;
-    dateToggleElement.checked = dateEnabled;       
+    dateToggleElement.checked = dateEnabled;    
+    
+    behanceOrderDropdownElement.value = behanceOrdering;
+    
+    artstationMediumDropdownElement.value = artStationMedium;
+    artstationCategoryDropdownElement.value = artStationCategory;
+    artstationOrderDropdownElement.value = artStationOrdering;
 
     updateDateTimeHTML();
     // addTutorialIfRequired(items.tutorialViewed);
@@ -128,9 +174,8 @@ $( "#close-tutorial-btn" ).click(function()
   }
 }
 
-function updateDateTimeHTML(timeEnabled, dateEnabled)
+function updateDateTimeHTML()
 {
-  // console.log(timeEnabled);
 
   if(timeEnabled == false)
   {
@@ -159,17 +204,28 @@ function updateDateTimeHTML(timeEnabled, dateEnabled)
   
 }
 
+var s_BehanceEnabledID = 'behance_enabled';
+var s_ArtStationEnabledID = 'artstation_enabled';
 var s_SearchTermID = 'search_term';
 var s_DisplayOrderID = 'display_order';
 var s_BehanceOrderID = 'behance_order';
+var s_ArtStationMediumID = 'artstation_medium';
+var s_ArtStationCategoryID = 'artstation_category';
 var s_ArtStationOrderID = 'artstation_order';
 
 function UpdateHTML()
 {
-  behanceElement              = document.getElementById('behance_enabled');
-  artStationElement           = document.getElementById('artstation_enabled');
+  behanceElement              = document.getElementById(s_BehanceEnabledID);
+  artStationElement           = document.getElementById(s_ArtStationEnabledID);
   searchTermElement           = document.getElementById(s_SearchTermID);
   displayOrderDropdownElement = document.getElementById(s_DisplayOrderID);
+
+  behanceOrderDropdownElement = document.getElementById(s_BehanceOrderID);
+
+  artstationMediumDropdownElement = document.getElementById(s_ArtStationMediumID);
+  artstationCategoryDropdownElement = document.getElementById(s_ArtStationCategoryID);
+  artstationOrderDropdownElement = document.getElementById(s_ArtStationOrderID);
+
   timeToggleElement           = document.getElementById('time_enabled');
   dateToggleElement           = document.getElementById('date_enabled');
 }
@@ -195,12 +251,40 @@ $(document).ready(function()
   });
   $('#'+s_DisplayOrderID).on('input', function() {
     save_options();
+    refresh();
   });
+  $('#'+s_BehanceEnabledID).change(function() {
+    save_options();
+    refresh();
+  });
+  $('#'+s_ArtStationEnabledID).change(function() {
+    save_options();
+    refresh();
+  });
+  $('#'+s_BehanceOrderID).on('input', function() {
+    save_options();
+    refresh();
+  });
+  $('#'+s_ArtStationMediumID).on('input', function() {
+    save_options();
+    refresh();
+  });
+  $('#'+s_ArtStationCategoryID).on('input', function() {
+    save_options();
+    refresh();
+  });
+  $('#'+s_ArtStationOrderID).on('input', function() {
+    save_options();
+    refresh();
+  });
+
   $('#time_enabled').change( function() {
     save_options();
+    updateDateTimeHTML();
   });
   $('#date_enabled').change( function() {
     save_options();
+    updateDateTimeHTML();
   });
 
   $( "#settings-button" ).click(function()
@@ -212,19 +296,26 @@ $(document).ready(function()
   $("#search_term").on('keyup', function (e) {
       if (e.keyCode == 13) {
 
-        var term = document.getElementById('search_term').value;      
-        chrome.storage.sync.set({
-          searchTerm: term
-        });
-        searchTerm = term;
-
-        // ClearGrid();
-        GetImages();
+        refresh();
       }
+  });
+
+  chrome.storage.onChanged.addListener(function(changes, namespace) {
+    for (key in changes) {
+      var storageChange = changes[key];
+      console.log('Storage key "%s" in namespace "%s" changed. ' +
+                  'Old value was "%s", new value is "%s".',
+                  key,
+                  namespace,
+                  storageChange.oldValue,
+                  storageChange.newValue);
+    }
   });
 
   AddSearchTermDropdownElements(DISPLAY_ORDER, s_DisplayOrderID);
   AddSearchTermDropdownElements(BEHANCE_ORDER, s_BehanceOrderID);
+  AddSearchTermDropdownElements(ARTSTATION_MEDIUM, s_ArtStationMediumID);
+  AddSearchTermDropdownElements(ARTSTATION_CATEGORY, s_ArtStationCategoryID);
   AddSearchTermDropdownElements(ARTSTATION_SORTING, s_ArtStationOrderID);
 
   restore_options();

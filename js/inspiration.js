@@ -4,9 +4,9 @@ be('Gs6WkD85SxnL9f6MbHjjr30udF8iZAdy')
 //  Setting Enums
 var DISPLAY_ORDER = 
 {
-  Random: "Random",
-  Views: "Views",
-  Featured_Date : "Featured Date"
+  random: "Random",
+  views: "Views",
+  // featured_date : "Featured Date"
 }
 
 var BEHANCE_ORDER = 
@@ -23,7 +23,24 @@ var ARTSTATION_SORTING =
   picks : "Picks"
 }
 
+var ARTSTATION_MEDIUM = 
+{
+  all : "All",
+  digital2d: "Digital 2D",
+  digital3d: "Digital 3D",
+  traditional2d : "Traditional 2D",
+  traditional3d : "Traditional 3D"
+}
 
+var ARTSTATION_CATEGORY = 
+{
+  all : "All",
+  concept_art: "Concept Art",
+  animation: "Animation",
+  archviz : "Archviz",
+  architecture : "Architecture",
+  characters : "Characters"
+}
 
 // Static Values
 var s_initialNumImagesToLoad = 50;
@@ -157,6 +174,18 @@ function GetImagesArtStation(numberToGet)
       artStationURL = 'https://www.artstation.com/projects.json?direction=desc&show_pro_first=true';
       // artStationURL += 
     }
+
+    if(artStationMedium != 'all')
+    {
+      artStationURL += '&medium='+artStationMedium;
+    }
+
+    if(artStationCategory != 'all')
+    {
+      artStationURL += '&category='+artStationCategory;
+    }
+
+    artStationURL += '&sorting='+artStationOrdering;
 
     artStationURL += '&page='+contentLoads;
     // artStationURL += '&medium=digital3d';
@@ -296,11 +325,11 @@ function DrawGridIfLoaded()
 
 function SortCells()
 {
-  if(totalOrdering == DISPLAY_ORDER.Random)
+  if(totalOrdering == 'random')
   {
     shuffle(displayCells);
   }
-  else if(totalOrdering == DISPLAY_ORDER.Views)
+  else if(totalOrdering == 'views')
   {
     displayCells.sort(function(a, b) { 
         return b.views - a.views;

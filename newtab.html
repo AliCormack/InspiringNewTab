@@ -35,11 +35,15 @@
       <div id="settings-window" class="settings-window">
         <h1>Settings</h1>
 
+        <div class="footnote">
+          Hover over for labels for more information.
+        </div>
+
         <div class="seperator"></div>
         
         <h2>General</h2>
-        <div class="toggle">
-          Get Images from Behance
+        <div class="toggle">          
+          <label title="Toggle whether Inspire shows images from Behance.net">Get Images from Behance</label>
           <label class="switch">
             <input id="behance_enabled" type="checkbox">
             <span class="slider round"></span>
@@ -47,7 +51,7 @@
         </div>
 
         <div class="toggle">
-          Get Images from ArtStation
+          <label title="Toggle whether Inspire shows images from ArtStation.com">Get Images from ArtStation</label>
           <label class="switch">
             <input id="artstation_enabled" type="checkbox">
             <span class="slider round"></span>
@@ -55,12 +59,13 @@
         </div>
 
         <div class="gallery-setting">
-          Search Term
+          
+          <label title="Optional search term if you want to display more specific results from sources.&#013;Leaving this blank will get the most recent popular artwork (recommended).&#013;Hit ENTER to refresh.">Search Term</label>
           <input id="search_term" type="text" name="searchterm"><br>
         </div>
 
         <div class="gallery-setting">
-          Display Order
+          <label title="The order to display artwork once it has been pulled from all sources.">Display Order</label>
           <select class="dropdown" id="display_order">
           </select>
         </div>
@@ -69,7 +74,7 @@
 
         <h2>Behance</h2>
         <div class="gallery-setting">
-          Get Images in order
+          <label title="The order in which to pull art from Behance.">Get images in order</label>
           <select class="dropdown" id="behance_order">
           </select>
         </div>
@@ -79,23 +84,19 @@
         <h2>ArtStation</h2>
 
         <div class="gallery-setting">
-            Medium
-            <select class="dropdown" id="">
-              <option value="views">Featured Date</option>
-              <option value="date">Likes</option>
+          <label title="The medium used in the artwork pulled from ArtStation.">Medium</label>
+            <select class="dropdown" id="artstation_medium">
             </select>
           </div>
 
         <div class="gallery-setting">
-            Category
-            <select class="dropdown" id="">
-              <option value="views">Featured Date</option>
-              <option value="date">Likes</option>
+          <label title="The category of artwork pulled from ArtStation">Category</label>
+            <select class="dropdown" id="artstation_category">
             </select>
           </div>
 
         <div class="gallery-setting">
-          Get Images in order
+          <label title="The order in which to pull art from ArtStation.">Get images in order</label>
           <select class="dropdown" id="artstation_order">
           </select>
         </div>
@@ -104,7 +105,7 @@
 
         <h2>Overlay</h2>
         <div class="toggle">
-          Time
+          <label title="Toggle whether time is shown as an overlay.">Show Time</label>
           <label class="switch">
             <input id="time_enabled" type="checkbox">
             <span class="slider round"></span>
@@ -112,9 +113,9 @@
         </div>
 
         <div class="toggle">
-            Date
+          <label title="Toggle whether the current date is shown as an overlay.">Show Date</label>
             <label class="switch">
-              <input id="date_enabled" type="checkbox">
+              <input id="date_enabled" type="checkbox" >
               <span class="slider round"></span>
             </label>
           </div>           
