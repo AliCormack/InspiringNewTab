@@ -274,6 +274,7 @@ $settings-btn-padding : 10px;
     text-align: center;
     position: relative;
     background:rgba(0,0,0,.1);
+
     span
     {
       position: absolute;
@@ -293,6 +294,10 @@ $settings-btn-padding : 10px;
     overflow:hidden;
     float:left;
     cursor:pointer;
+
+    // opacity: 0.5;     
+
+  
 
     $heightRatio: 79 / 101;    
 
@@ -329,15 +334,16 @@ $settings-btn-padding : 10px;
     }
 
     img {
-      opacity: 1;
-      transition: opacity 0.3s;
+      display:none;
       width:100%;
     }
 
-    img[data-src] {
-      width:100%;
-      opacity: 0;
-    }
+    
   }
+
+  // .fadein {
+  //   transition: all linear 5s;
+  //   opacity: 1 !important;
+  // }
 }
 

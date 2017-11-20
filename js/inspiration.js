@@ -118,10 +118,13 @@ function DrawGrid()
       // $(".grid").append(scrollToLoadCell);
 
       FadeIn();
-      IsScreenFilled();
+      
     }
    
   }
+
+  IsScreenFilled();
+
 }
 
 function IsScreenFilled()
@@ -131,16 +134,16 @@ function IsScreenFilled()
 
   if (gridHeight < windowHeight ) 
   {    
-    // GetImages();
+    GetImages();
   }
 }
 
 function FadeIn()
 {
-  [].forEach.call(document.querySelectorAll('img[data-src]'), function(img) {
-    img.setAttribute('src', img.getAttribute('data-src'));
+  [].forEach.call(document.querySelectorAll('img'), function(img) {
+    // img.setAttribute('src', img.getAttribute('data-src'));
     img.onload = function() {
-      img.removeAttribute('data-src');
+      $(img).fadeIn(750);
     };
   });
 }
@@ -357,7 +360,9 @@ function ClearGrid()
   // Infinite Scroll
 
   $(window).on('scroll', function() {
-      if($(window).scrollTop() + $(window).height() >= $('body')[0].scrollHeight-20) {
+      var distFromBtm = 150;
+
+      if($(window).scrollTop() + $(window).height() >= $('body')[0].scrollHeight-distFromBtm) {
         console.log('BOTTOM REACHED');
         GetImages();
       }

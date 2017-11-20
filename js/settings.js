@@ -66,7 +66,7 @@ function save_options()
     searchTerm: searchTerm,
     timeEnabled: timeEnabled,
     dateEnabled: dateEnabled,
-    tutorialViewed: false,
+    tutorialViewed: tutorialViewed,
     artStationEnabled : artStationEnabled,
     behanceEnabled : behanceEnabled,
     totalOrdering : totalOrdering,
@@ -98,7 +98,7 @@ function restore_options()
     searchTerm: defaultSearchTerm,
     timeEnabled: defaultTimeEnabled,
     dateEnabled: defaultDateEnabled,
-    tutorialViewed: defaultTutorialViewed,
+    tutorialViewed2: defaultTutorialViewed,
     artStationEnabled : defaultArtStationEnabled,
     behanceEnabled : defaultBehanceEnabled,
     totalOrdering : defaultTotalOrdering,
@@ -121,7 +121,7 @@ function restore_options()
     artStationCategory = items.artStationCategory;
     artStationOrdering = items.artStationOrdering;
 
-    tutorialViewed = false;
+    tutorialViewed = items.tutorialViewed2;
    
     console.log(items);
 
@@ -159,8 +159,8 @@ function addTutorialIfRequired(tutorialViewed)
       "<br>"+
       "<p>Inspire sources its content from both <a href='https://www.behance.net/'>Behance.net</a> and <a href='https://www.artstation.com/'>ArtStation.com</a>. We hope you enjoy the gorgeous art and design fresh daily from around the web! </p>"+
       "<br>"+
-      "<p>You can edit these image sources to your liking, and find many other customisation options via the preferences panel in the bottom right, such as adding a search term and changing the display order of images. </p><br> "+
-       "<p>Enjoy, and please leave <a href='https://chrome.google.com/webstore/detail/inspire-gallery-new-tab/feldechheiacimdajbkleojednhpophc'>feedback</a> if you have any!</p><br>"+
+      "<p>You can edit these image sources to your liking, and find many other customisation options via the preferences panel in the bottom right (&#9881;). A search term can be specified to show only what you're interested in, and the display order of images changed, for example. </p><br> "+
+       "<p>Any and all <a href='https://chrome.google.com/webstore/detail/inspire-gallery-new-tab/feldechheiacimdajbkleojednhpophc'>feedback</a> is welcome!</p><br>"+
       "<button id='close-tutorial-btn' type='button'>Thanks, got it!</button>"+
    "</div>"+
 "</div>");
@@ -169,7 +169,7 @@ $( "#close-tutorial-btn" ).click(function()
 {
   $( "#tutorial" ).remove();
   chrome.storage.sync.set({
-    tutorialViewed: true,
+    tutorialViewed2: true,
   });
 });
 

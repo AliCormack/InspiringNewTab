@@ -188,9 +188,5 @@ body {
     .grid .cell a:hover {
       opacity: 0.9; }
     .grid .cell img {
-      opacity: 1;
-      transition: opacity 0.3s;
+      display: none;
       width: 100%; }
-    .grid .cell img[data-src] {
-      width: 100%;
-      opacity: 0; }
