@@ -63,7 +63,7 @@ function Init()
 
 Init();
 
-function Cell(id, imgUrl, linkUrl, adult, date, featuredDate, views, previewImageURL, description, author, authorURL)
+function Cell(id, imgUrl, linkUrl, adult, date, featuredDate, views, previewImageURL, description, author, authorURL, title)
 {
   this.id = id;
   this.imgUrl = imgUrl;
@@ -81,6 +81,7 @@ function Cell(id, imgUrl, linkUrl, adult, date, featuredDate, views, previewImag
   this.description = description;
   this.author = author;
   this.authorURL = authorURL;
+  this.title = title;
 }
 
 function GetImages()
@@ -108,7 +109,7 @@ function GetImages()
 function DrawGrid()
 {
 
-  for (var i = 0; i <displayCells.length; i++)
+  for (var i = 0; i <displayCells.length; i++) (function(i)
   {
     var cell = displayCells[i];
 
@@ -116,20 +117,51 @@ function DrawGrid()
     {
       cell.drawn = true;
 
-      var cellHTML = '<div class = "cell"> <a href = '+cell.linkUrl+'> <img src=' + cell.imgUrl + '></a></img></div>';
-      $(".grid").append(cellHTML);
-      // $(".scroll").remove();    
-      // var scrollToLoadCell = '<div class = "cell scroll"><span>&#9679; &#9679; &#9679;</span></div>';
-      // $(".grid").append(scrollToLoadCell);
+      var div = document.createElement("div");
+      div.setAttribute('class', 'cell');   
+      
+      var img = document.createElement("img");
+      img.setAttribute('src', cell.imgUrl); 
+      div.appendChild(img);
+
+      div.onclick = function()
+      {
+        Preview(cell);
+      }
+
+      $(".grid").append(div);
 
       FadeIn();
       
     }
    
-  }
+  })(i);
 
   IsScreenFilled();
 
+}
+
+function Preview(cell)
+{
+  console.log(cell);
+
+  $('#preview').show();
+
+  $('#preview-img').attr("src", cell.previewImageURL);
+
+  $('#preview-title').text(cell.title);
+  $('#preview-author').text(cell.author);
+  $('#preview-description').text(cell.description);
+
+  $('#preview-close').click(function()
+  {
+    $('#preview').hide();
+  });
+
+  $('#preview-bg').click(function()
+  {
+    $('#preview').hide();
+  });
 }
 
 function IsScreenFilled()
@@ -235,6 +267,8 @@ function FinishedLoadingSource()
 
 function NewArtStationCell(array, result)
 {
+  console.log(result);
+
   var cell = new Cell(
     "ArtStation"+result.id, 
     result.cover.thumb_url, 
@@ -246,7 +280,8 @@ function NewArtStationCell(array, result)
     result.cover.medium_image_url,
     result.description,
     result.user.full_name,
-    result.user.artstation_profile_url);
+    result.user.artstation_profile_url,
+    result.title);
 
     array.push(cell);
 }
@@ -285,7 +320,6 @@ function GetImagesBehance()
          
          try
          {
-console.log(project);
 
           var cell = new Cell(
             "Behance"+project.id, 
@@ -298,7 +332,8 @@ console.log(project);
             project.covers['original'],
             "",
             project.owners[0].display_name,
-            project.owners[0].url
+            project.owners[0].url,
+            project.name
           );
         }
 

@@ -9,10 +9,14 @@ body {
   bottom: 0;
   right: 0;
   position: fixed;
-  background: rgba(0, 0, 0, 0.55);
   text-align: center; }
+  .preview #preview-bg {
+    background: rgba(0, 0, 0, 0.85);
+    width: 100%;
+    height: 100%; }
   .preview .preview-content {
-    width: 80%;
+    max-width: 80%;
+    max-width: 1500px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -31,14 +35,19 @@ body {
     .preview .preview-content .preview-img-container {
       max-height: 900px;
       overflow: hidden; }
-      .preview .preview-content .preview-img-container .preview_img {
+      .preview .preview-content .preview-img-container #preview-img {
         width: 100%;
         height: auto; }
     .preview .preview-content .preview-text {
       text-align: left;
-      padding: 16px; }
-      .preview .preview-content .preview-text h1, .preview .preview-content .preview-text h2, .preview .preview-content .preview-text p {
-        margin: 0; }
+      padding: 16px;
+      padding-top: 11px; }
+      .preview .preview-content .preview-text h1, .preview .preview-content .preview-text h3, .preview .preview-content .preview-text p {
+        margin: 5px 0 5px 0; }
+      .preview .preview-content .preview-text h1 {
+        color: #008ae7; }
+      .preview .preview-content .preview-text p {
+        font-size: 13px; }
 
 ::-webkit-scrollbar {
   display: none; }
