@@ -3,6 +3,46 @@ body {
   background: white;
   font-family: 'Cabin', sans-serif; }
 
+.preview {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.55);
+  text-align: center; }
+  .preview .preview-content {
+    width: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: white; }
+    .preview .preview-content #preview-close {
+      position: absolute;
+      top: 0%;
+      right: 0%;
+      height: 25px;
+      width: 30px;
+      background: rgba(0, 0, 0, 0.75);
+      font-size: 15px;
+      padding-top: 5px; }
+    .preview .preview-content .preview-img-container {
+      max-height: 900px;
+      overflow: hidden; }
+      .preview .preview-content .preview-img-container .preview_img {
+        width: 100%;
+        height: auto; }
+    .preview .preview-content .preview-text {
+      text-align: left;
+      padding: 16px; }
+      .preview .preview-content .preview-text h1, .preview .preview-content .preview-text h2, .preview .preview-content .preview-text p {
+        margin: 0; }
+
+::-webkit-scrollbar {
+  display: none; }
+
 .tutorial {
   top: 0;
   left: 0;
@@ -167,19 +207,19 @@ body {
     @media (min-width: 450px) {
       .grid .cell {
         width: 50%;
-        height: calc((50vw) * 0.78218 - 7px); } }
+        height: calc((50vw) * 0.7821782178 - 7px); } }
     @media (min-width: 700px) {
       .grid .cell {
         width: 33.3%;
-        height: calc((33.3vw) * 0.78218 - 5px); } }
+        height: calc((33.3vw) * 0.7821782178 - 5px); } }
     @media (min-width: 1000px) {
       .grid .cell {
         width: 20%;
-        height: calc(20vw * 0.78218 - 5px); } }
+        height: calc(20vw * 0.7821782178 - 5px); } }
     @media (min-width: 1200px) {
       .grid .cell {
-        width: 14.28571%;
-        height: calc((14.28vw) * 0.78218 - 3px); } }
+        width: 14.2857142857%;
+        height: calc((14.28vw) * 0.7821782178 - 3px); } }
     .grid .cell a {
       -moz-transition: opacity 0.1s;
       -o-transition: opacity 0.1s;
@@ -190,3 +230,5 @@ body {
     .grid .cell img {
       display: none;
       width: 100%; }
+
+/*# sourceMappingURL=main.css.map */

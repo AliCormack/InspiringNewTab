@@ -63,7 +63,7 @@ function Init()
 
 Init();
 
-function Cell(id, imgUrl, linkUrl, adult, date, featuredDate, views)
+function Cell(id, imgUrl, linkUrl, adult, date, featuredDate, views, previewImageURL, description, author, authorURL)
 {
   this.id = id;
   this.imgUrl = imgUrl;
@@ -76,6 +76,11 @@ function Cell(id, imgUrl, linkUrl, adult, date, featuredDate, views)
   this.views = views;
 
   this.drawn = false;
+
+  this.previewImageURL = previewImageURL;
+  this.description = description;
+  this.author = author;
+  this.authorURL = authorURL;
 }
 
 function GetImages()
@@ -237,7 +242,11 @@ function NewArtStationCell(array, result)
     result.adult_content, 
     result.published_at, 
     result.published_at, // No featured equivalent for ArtStation
-    result.views_count);
+    result.views_count,
+    result.cover.medium_image_url,
+    result.description,
+    result.user.full_name,
+    result.user.artstation_profile_url);
 
     array.push(cell);
 }
@@ -276,6 +285,8 @@ function GetImagesBehance()
          
          try
          {
+console.log(project);
+
           var cell = new Cell(
             "Behance"+project.id, 
             imgURL, 
@@ -283,7 +294,12 @@ function GetImagesBehance()
             project.mature_content, 
             project.published_on, 
             featuredOn,
-            project.stats.views);
+            project.stats.views,
+            project.covers['original'],
+            "",
+            project.owners[0].display_name,
+            project.owners[0].url
+          );
         }
 
         catch (e)

@@ -25,6 +25,74 @@ body
   font-family: 'Cabin', sans-serif;
 }
 
+.preview
+{
+  top:0;
+  left:0;
+  bottom:0;
+  right:0;
+  position:fixed;
+  background: rgba(0, 0, 0, 0.55);
+
+  text-align:center;
+
+  .preview-content
+  {
+    width: 80%;
+    // height:500px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: rgba(0, 0, 0, 0.85);
+
+    color:white;
+
+    #preview-close
+    {
+      position: absolute;
+      top: 0%;
+      right: 0%;
+      height:25px;
+      width:30px;
+      background: rgba(0, 0, 0, 0.75);
+      font-size: 15px;
+      padding-top:5px;
+    }
+
+    .preview-img-container
+    {
+      max-height:900px;
+      overflow:hidden;
+
+      .preview_img
+      {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    .preview-text
+    {
+      // height:100px;
+      text-align:left;
+      // margin-left:16px;
+      padding:16px;
+
+      h1, h2, p
+      {
+        margin:0;
+      }
+    }
+  }
+}
+
+::-webkit-scrollbar { 
+  display: none; 
+}
+
 .tutorial
 {
   top:0;
