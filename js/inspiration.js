@@ -63,7 +63,7 @@ function Init()
 
 Init();
 
-function Cell(id, imgUrl, linkUrl, adult, date, featuredDate, views, previewImageURL, description, author, authorURL, title)
+function Cell(id, imgUrl, linkUrl, adult, date, featuredDate, views, previewImageURL, description, author, authorURL, title, showPreview)
 {
   this.id = id;
   this.imgUrl = imgUrl;
@@ -82,6 +82,8 @@ function Cell(id, imgUrl, linkUrl, adult, date, featuredDate, views, previewImag
   this.author = author;
   this.authorURL = authorURL;
   this.title = title;
+
+  this.showPreview = showPreview;
 }
 
 function GetImages()
@@ -151,7 +153,6 @@ function Preview(cell)
 
   $('#preview-title').text(cell.title);
   $('#preview-author').text(cell.author);
-  $('#preview-description').text(cell.description);
 
   $('#preview-close').click(function()
   {
@@ -162,6 +163,12 @@ function Preview(cell)
   {
     $('#preview').hide();
   });
+
+  $('#preview-content').click(function()
+  {
+    window.location.href = cell.linkUrl;
+  });
+
 }
 
 function IsScreenFilled()
@@ -207,8 +214,9 @@ function GetImagesArtStation(numberToGet)
 
     if(searchTerm)
     {
-      artStationURL = 'https://www.artstation.com/search/projects.json?direction=desc&show_pro_first=true';
-      artStationURL += '&q='+searchTerm;
+      artStationURL = 'https://www.artstation.com/api/v2/search/projects.json?direction=desc&show_pro_first=true&per_page=50';
+      artStationURL += '&query='+searchTerm;
+      //https://www.artstation.com/api/v2/search/projects.json?query=SEARCH%20TERM&page=1&per_page=50&sorting=relevance&pro_first=1&filters=%5B%5D
     }
     else
     {
@@ -243,7 +251,14 @@ function GetImagesArtStation(numberToGet)
       for (var i = 0; i < results.length; i++) 
       {
         var result = results[i];
-        NewArtStationCell(artStationPreloadedCells, result); 
+        if(searchTerm)
+        {
+          NewArtStationCellSearch(artStationPreloadedCells, result); 
+        }
+        else
+        {
+          NewArtStationCell(artStationPreloadedCells, result); 
+        }
       }
 
       console.log(artStationPreloadedCells.length + ' Cells Precached For Art Station After');      
@@ -265,6 +280,28 @@ function FinishedLoadingSource()
   DrawGridIfLoaded();
 }
 
+function NewArtStationCellSearch(array, result)
+{
+  //console.log(result);
+
+  var cell = new Cell(
+    "ArtStation"+result.id, 
+    result.smaller_square_cover_url, 
+    result.url, 
+    result.adult_content, 
+    '', 
+    '', // No featured equivalent for ArtStation
+    50,
+    result.smaller_square_cover_url,
+    '',
+    result.user.full_name,
+    '',
+    result.title,
+    false);
+
+    array.push(cell);
+}
+
 function NewArtStationCell(array, result)
 {
   console.log(result);
@@ -277,11 +314,12 @@ function NewArtStationCell(array, result)
     result.published_at, 
     result.published_at, // No featured equivalent for ArtStation
     result.views_count,
-    result.cover.medium_image_url,
-    result.description,
+    result.cover.small_square_url,
+    '',
     result.user.full_name,
-    result.user.artstation_profile_url,
-    result.title);
+    '',
+    result.title,
+    false);
 
     array.push(cell);
 }
@@ -318,6 +356,8 @@ function GetImagesBehance()
           var imgURL = project.covers['404'] != undefined ? project.covers['404'] : project.covers['original'];          
           var featuredOn = project.features != undefined ? project.features[0].featured_on : project.published_on;
          
+          console.log(project);
+
          try
          {
 
@@ -333,7 +373,8 @@ function GetImagesBehance()
             "",
             project.owners[0].display_name,
             project.owners[0].url,
-            project.name
+            project.name,
+            true
           );
         }
 

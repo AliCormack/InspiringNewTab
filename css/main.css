@@ -22,7 +22,8 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(0, 0, 0, 0.85);
-    color: white; }
+    color: white;
+    cursor: pointer; }
     .preview .preview-content #preview-close {
       position: absolute;
       top: 0%;
