@@ -41,7 +41,8 @@
 
         <div class="seperator"></div>
         
-        <h2>General</h2>
+        <h2>General</h2>        
+
         <div class="toggle">          
           <label title="Toggle whether Inspire shows images from Behance.net">Get Images from Behance</label>
           <label class="switch">
@@ -58,23 +59,24 @@
           </label>
         </div>
 
-        <div class="gallery-setting">
-          
+        <div class="gallery-setting">          
           <label title="Optional search term if you want to display more specific results from sources.&#013;Leaving this blank will get the most recent popular artwork (recommended).&#013;Hit ENTER to refresh.">Search Term</label>
           <input id="search_term" type="text" name="searchterm"><br>
         </div>
 
-        <div class="gallery-setting">
-          <label title="The order to display artwork once it has been pulled from all sources.">Display Order</label>
-          <select class="dropdown" id="display_order">
-          </select>
+        <div class="toggle no-padding-bottom">          
+          <label title="Whether to open images in a new tab, or this tab.">Open Images in a Seperate Tab</label>
+          <label class="switch">
+            <input id="seperate_tab" type="checkbox">
+            <span class="slider round"></span>
+          </label>
         </div>
 
         <div class="seperator"></div>
 
         <h2>Behance</h2>
-        <div class="gallery-setting">
-          <label title="The order in which to pull art from Behance.">Get images in order</label>
+        <div class="gallery-setting no-padding-bottom">
+          <label title="The order in which to pull art from Behance.">Ordering</label>
           <select class="dropdown" id="behance_order">
           </select>
         </div>
@@ -85,18 +87,12 @@
 
         <div class="gallery-setting">
           <label title="The medium used in the artwork pulled from ArtStation.">Medium</label>
-            <select class="dropdown" id="artstation_medium">
-            </select>
-          </div>
+          <select class="dropdown" id="artstation_medium">
+          </select>
+        </div>
 
-        <div class="gallery-setting">
-          <label title="The category of artwork pulled from ArtStation">Category</label>
-            <select class="dropdown" id="artstation_category">
-            </select>
-          </div>
-
-        <div class="gallery-setting">
-          <label title="The order in which to pull art from ArtStation.">Get images in order</label>
+        <div class="gallery-setting no-padding-bottom">
+          <label title="The order in which to pull art from ArtStation.">Ordering</label>
           <select class="dropdown" id="artstation_order">
           </select>
         </div>
@@ -112,7 +108,7 @@
           </label>
         </div>
 
-        <div class="toggle">
+        <div class="toggle no-padding-bottom">
           <label title="Toggle whether the current date is shown as an overlay.">Show Date</label>
             <label class="switch">
               <input id="date_enabled" type="checkbox" >
@@ -127,28 +123,5 @@
       </div>
 
     </div>
-
-    <div id = "preview" class = "preview" style="display: none;">
-      
-      <div id = "preview-bg">
-        
-      </div>
-
-      <div class = "preview-content" id = "preview-content">
-          <div class = "preview-img-container">
-            <img id = "preview-img" src = "">
-          </div>
-          <div class = "preview-text">
-            <h1><a id = "preview-title">The Biggest Piece in the Universe</a></h1>
-            <h3><a id = "preview-author">Ali Cormack</a></h3>
-          </div>
-          <div id = "preview-close">X</div>
-      </div>
-    
-      
-
-  </div>
-
-
   </body>
 </html>

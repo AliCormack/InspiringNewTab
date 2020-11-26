@@ -1,16 +1,11 @@
 Community
 https://www.artstation.com/api/v2/community/explore/projects/community.json
 
-
 Trending
 https://www.artstation.com/api/v2/community/explore/projects/trending.json
 
-
 Latest
 https://www.artstation.com/api/v2/community/explore/projects/latest.json
-
-Search
-https://www.artstation.com/api/v2/search/projects.json
 
 Parameters
 ?page=1
@@ -20,4 +15,34 @@ direction=desc
 show_pro_first=true
 query=dog
 sorting=trending
+
+Search
+https://www.artstation.com/api/v2/search/projects.json
+
+Sorting
+sorting=XYZ
+rank
+relevance
+likes
+date
+
 {"query":"dog","page":1,"per_page":50,"sorting":"relevance","pro_first":"1","filters":[],"additional_fields":[]}
+
+Mediums
+&medium_ids%5B%5D={ID}
+Digital2D = 1
+Digital3D = 2
+Animation = 6
+RealTime = 7
+Live Action = 8
+3D Printing = 9
+Traditional Ink = 10
+Traditional Dry Media = 11
+Traditional Paint = 12
+Traditional Sculpture = 13
+Mixed Media = 14
+
+Could take mediums from 
+https://www.artstation.com/mediums.json 
+or
+https://www.artstation.com/api/v2/search/projects/filter_fields.json

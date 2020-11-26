@@ -6,9 +6,9 @@ var dateEnabled;
 var tutorialViewed;
 var artStationEnabled;
 var behanceEnabled;
-var totalOrdering;
 var behanceOrdering;
 var artStationOrdering;
+var seperateTab;
 
 // Defaults
 
@@ -19,23 +19,22 @@ var defaultDateEnabled = true;
 var defaultTutorialViewed = false;
 var defaultArtStationEnabled = true;
 var defaultBehanceEnabled = true;
-var defaultTotalOrdering = 'random'; // TODO THIS IS WRONG NEED THE VARIABLE NAME NOT THE STRING
 var defaultBehanceOrdering = 'featured_date';
-var defaultArtstationMedium = 'all';
-var defaultArtstationCategory = 'all';
-var defaultArtstationOrdering = 'picks';
+var defaultArtstationMedium = 0;
+var defaultArtstationOrdering = 'trending';
+var defaultSeperateTab = false;
 
 // HTML
 
 var behanceElement;
 var artStationElement;
 var searchTermElement;
-var displayOrderDropdownElement;
+
+var seperateTabElement;
 
 var behanceOrderDropdownElement;
 
 var artstationMediumDropdownElement;
-var artstationCategoryDropdownElement;
 var artstationOrderDropdownElement;
 
 var timeToggleElement;
@@ -49,18 +48,16 @@ function save_options()
   artStationEnabled = artStationElement.checked;
   behanceEnabled = behanceElement.checked;
   searchTerm = searchTermElement.value;
-  totalOrdering = displayOrderDropdownElement.value;
+
+  seperateTab = seperateTabElement.checked;
 
   behanceOrdering = behanceOrderDropdownElement.value;
 
   artStationMedium = artstationMediumDropdownElement.value;
-  artStationCategory = artstationCategoryDropdownElement.value;
   artStationOrdering = artstationOrderDropdownElement.value;
   
   timeEnabled = timeToggleElement.checked;
   dateEnabled = dateToggleElement.checked;  
-  
-  console.log(displayOrderDropdownElement.value);
 
   chrome.storage.sync.set({
     searchTerm: searchTerm,
@@ -69,11 +66,10 @@ function save_options()
     tutorialViewed: tutorialViewed,
     artStationEnabled : artStationEnabled,
     behanceEnabled : behanceEnabled,
-    totalOrdering : totalOrdering,
     behanceOrdering : behanceOrdering,
     artStationMedium : artStationMedium,
-    artStationCategory : artStationCategory,
-    artStationOrdering : artStationOrdering
+    artStationOrdering : artStationOrdering,
+    seperateTab : seperateTab
   });
 
   updateDateTimeHTML();
@@ -101,11 +97,10 @@ function restore_options()
     tutorialViewed2: defaultTutorialViewed,
     artStationEnabled : defaultArtStationEnabled,
     behanceEnabled : defaultBehanceEnabled,
-    totalOrdering : defaultTotalOrdering,
     behanceOrdering : defaultBehanceOrdering,
     artStationMedium : defaultArtstationMedium,
-    artStationCategory : defaultArtstationCategory,
-    artStationOrdering : defaultArtstationOrdering
+    artStationOrdering : defaultArtstationOrdering,
+    seperateTab : defaultSeperateTab
   }, function(items) 
   {
     
@@ -115,11 +110,11 @@ function restore_options()
     
     artStationEnabled = items.artStationEnabled;
     behanceEnabled = items.behanceEnabled;
-    totalOrdering = items.totalOrdering;
     behanceOrdering = items.behanceOrdering;
     artStationMedium = items.artStationMedium;
-    artStationCategory = items.artStationCategory;
     artStationOrdering = items.artStationOrdering;
+
+    seperateTab = items.seperateTab;
 
     tutorialViewed = items.tutorialViewed2;
    
@@ -127,15 +122,14 @@ function restore_options()
 
     behanceElement.checked    = behanceEnabled;
     artStationElement.checked = artStationEnabled;
-    displayOrderDropdownElement.value = totalOrdering;
     searchTermElement.value   = searchTerm;
+    seperateTabElement.checked = seperateTab;
     timeToggleElement.checked = timeEnabled;
     dateToggleElement.checked = dateEnabled;    
     
     behanceOrderDropdownElement.value = behanceOrdering;
     
     artstationMediumDropdownElement.value = artStationMedium;
-    artstationCategoryDropdownElement.value = artStationCategory;
     artstationOrderDropdownElement.value = artStationOrdering;
 
     updateDateTimeHTML();
@@ -155,12 +149,18 @@ function addTutorialIfRequired(tutorialViewed)
       "<img width=200 height=200 src='img/icon/Icon-Transparent-512.png'></img>"+
       "<h1>Inspire</h1>"+
       "<h2>New Tab Gallery</h2>"+
-      "<h4>Beta v0.0.1</h4>"+
       "<br>"+
-      "<p>Inspire sources its content from both <a href='https://www.behance.net/'>Behance.net</a> and <a href='https://www.artstation.com/'>ArtStation.com</a>. We hope you enjoy the gorgeous art and design fresh daily from around the web! </p>"+
+      "<p>Inspire sources its content from both <a href='https://www.behance.net/'>Behance.net</a> and <a href='https://www.artstation.com/'>ArtStation.com</a>. We hope you enjoy the gorgeous art and design fresh daily from around the web!</p>"+
       "<br>"+
-      "<p>You can edit these image sources to your liking, and find many other customisation options via the preferences panel in the bottom right (&#9881;). A search term can be specified to show only what you're interested in, and the display order of images changed, for example. </p><br> "+
+      "<p>You can edit these image sources to your liking, specify a search term, and find many other customisation options via the preferences panel in the bottom right (&#9881;)</p><br> "+
        "<p>Any and all <a href='https://chrome.google.com/webstore/detail/inspire-gallery-new-tab/feldechheiacimdajbkleojednhpophc'>feedback</a> is welcome!</p><br>"+
+      "<h2>New in V1.0</h2>"+
+      "<ul>"+
+      "<li><span>Support for new ArtStation APIs</span></li>"+
+      "<li><span>Improved Grid Layout</span></li>"+
+      "<li><span>More Artstation Mediums</span></li>"+
+      "<li><span>Numerous Bug Fixes</span></li>"+
+      "</ul>"+
       "<button id='close-tutorial-btn' type='button'>Thanks, got it!</button>"+
    "</div>"+
 "</div>");
@@ -209,10 +209,10 @@ function updateDateTimeHTML()
 var s_BehanceEnabledID = 'behance_enabled';
 var s_ArtStationEnabledID = 'artstation_enabled';
 var s_SearchTermID = 'search_term';
+var s_SeperateTabID = 'seperate_tab';
 var s_DisplayOrderID = 'display_order';
 var s_BehanceOrderID = 'behance_order';
 var s_ArtStationMediumID = 'artstation_medium';
-var s_ArtStationCategoryID = 'artstation_category';
 var s_ArtStationOrderID = 'artstation_order';
 
 function UpdateHTML()
@@ -220,12 +220,12 @@ function UpdateHTML()
   behanceElement              = document.getElementById(s_BehanceEnabledID);
   artStationElement           = document.getElementById(s_ArtStationEnabledID);
   searchTermElement           = document.getElementById(s_SearchTermID);
-  displayOrderDropdownElement = document.getElementById(s_DisplayOrderID);
+
+  seperateTabElement          = document.getElementById(s_SeperateTabID);
 
   behanceOrderDropdownElement = document.getElementById(s_BehanceOrderID);
 
   artstationMediumDropdownElement = document.getElementById(s_ArtStationMediumID);
-  artstationCategoryDropdownElement = document.getElementById(s_ArtStationCategoryID);
   artstationOrderDropdownElement = document.getElementById(s_ArtStationOrderID);
 
   timeToggleElement           = document.getElementById('time_enabled');
@@ -251,10 +251,6 @@ $(document).ready(function()
   $('#'+s_SearchTermID).on('input', function() {
       save_options();
   });
-  $('#'+s_DisplayOrderID).on('input', function() {
-    save_options();
-    refresh();
-  });
   $('#'+s_BehanceEnabledID).change(function() {
     save_options();
     refresh();
@@ -263,15 +259,14 @@ $(document).ready(function()
     save_options();
     refresh();
   });
+  $('#'+s_SeperateTabID).change(function() {
+    save_options();
+  });
   $('#'+s_BehanceOrderID).on('input', function() {
     save_options();
     refresh();
   });
   $('#'+s_ArtStationMediumID).on('input', function() {
-    save_options();
-    refresh();
-  });
-  $('#'+s_ArtStationCategoryID).on('input', function() {
     save_options();
     refresh();
   });
@@ -302,22 +297,24 @@ $(document).ready(function()
       }
   });
 
-  chrome.storage.onChanged.addListener(function(changes, namespace) {
-    for (key in changes) {
-      var storageChange = changes[key];
-      console.log('Storage key "%s" in namespace "%s" changed. ' +
-                  'Old value was "%s", new value is "%s".',
-                  key,
-                  namespace,
-                  storageChange.oldValue,
-                  storageChange.newValue);
-    }
-  });
+  if(chrome.storage)
+  {
+    chrome.storage.onChanged.addListener(function(changes, namespace) {
+      for (key in changes) {
+        var storageChange = changes[key];
+        console.log('Storage key "%s" in namespace "%s" changed. ' +
+                    'Old value was "%s", new value is "%s".',
+                    key,
+                    namespace,
+                    storageChange.oldValue,
+                    storageChange.newValue);
+      }
+    });
+  }
 
   AddSearchTermDropdownElements(DISPLAY_ORDER, s_DisplayOrderID);
   AddSearchTermDropdownElements(BEHANCE_ORDER, s_BehanceOrderID);
   AddSearchTermDropdownElements(ARTSTATION_MEDIUM, s_ArtStationMediumID);
-  AddSearchTermDropdownElements(ARTSTATION_CATEGORY, s_ArtStationCategoryID);
   AddSearchTermDropdownElements(ARTSTATION_SORTING, s_ArtStationOrderID);
 
   restore_options();

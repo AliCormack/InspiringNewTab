@@ -20,26 +20,24 @@ var ARTSTATION_SORTING =
 {
   trending: "Trending",
   latest: "Latest",
-  picks : "Picks"
+  community : "Community"
 }
 
 var ARTSTATION_MEDIUM = 
 {
-  all : "All",
-  digital2d: "Digital 2D",
-  digital3d: "Digital 3D",
-  traditional2d : "Traditional 2D",
-  traditional3d : "Traditional 3D"
-}
-
-var ARTSTATION_CATEGORY = 
-{
-  all : "All",
-  concept_art: "Concept Art",
-  animation: "Animation",
-  archviz : "Archviz",
-  architecture : "Architecture",
-  characters : "Characters"
+  0 : "All",
+  1: "Digital 2D",
+  2: "Digital 3D",
+  14: "Mixed Media",
+  6: "Animation",
+  8: "Live Action CG/VFX",
+  14: "Mixed Media",
+  7: "Real-time",
+  11: "Traditional Dry Media",
+  10: "Traditional Ink",
+  12: "Traditional Paint",
+  13: "Traditional Sculpture",
+  9: "3D Printing",
 }
 
 // Static Values
@@ -126,9 +124,10 @@ function DrawGrid()
       img.setAttribute('src', cell.imgUrl); 
       div.appendChild(img);
 
-      div.onclick = function()
+      div.onclick = function(e)
       {
-        Preview(cell);
+        console.log(e.which);
+        window.open(cell.linkUrl, seperateTab ? "_blank" : "_self");
       }
 
       $(".grid").append(div);
@@ -140,34 +139,6 @@ function DrawGrid()
   })(i);
 
   IsScreenFilled();
-
-}
-
-function Preview(cell)
-{
-  console.log(cell);
-
-  $('#preview').show();
-
-  $('#preview-img').attr("src", cell.previewImageURL);
-
-  $('#preview-title').text(cell.title);
-  $('#preview-author').text(cell.author);
-
-  $('#preview-close').click(function()
-  {
-    $('#preview').hide();
-  });
-
-  $('#preview-bg').click(function()
-  {
-    $('#preview').hide();
-  });
-
-  $('#preview-content').click(function()
-  {
-    window.location.href = cell.linkUrl;
-  });
 
 }
 
@@ -198,47 +169,43 @@ function GetImagesArtStation(numberToGet)
 
   if(artStationPreloadedCells.length < imagesToDisplayPerSource)
   {
-    // https://www.artstation.com/random_project.json?&medium=digital2d&category=concept_art
-    // Params
-    // &randomize=true
-    // &page=1
-    // &category=concept_art | animation | archviz | architecture | characters
-    // &medium=digital2d | digital3d | traditional2d | traditional3d
-    // &sorting=trending | latest | picks
-    // &direction=desc 
-    // &q=search_term
-    // &order=likes_count | published
-    // &show_pro_first = true
+    // See ArtstationAPI.txt for API details
 
     var artStationURL;    
 
     if(searchTerm)
     {
-      artStationURL = 'https://www.artstation.com/api/v2/search/projects.json?direction=desc&show_pro_first=true&per_page=50';
+      artStationURL = 'https://www.artstation.com/api/v2/search/projects.json?';
+      
       artStationURL += '&query='+searchTerm;
-      //https://www.artstation.com/api/v2/search/projects.json?query=SEARCH%20TERM&page=1&per_page=50&sorting=relevance&pro_first=1&filters=%5B%5D
+    
+      artStationURL += '&sorting='+artStationOrdering;
     }
     else
     {
-      artStationURL = 'https://www.artstation.com/projects.json?direction=desc&show_pro_first=true';
-      // artStationURL += 
+      artStationURL = 'https://www.artstation.com/api/v2/community/explore/projects/';
+
+      artStationURL += artStationOrdering;
+      artStationURL += ".json?";
+
+      console.log(artStationURL);
+
+      // Parameters
+
     }
 
-    if(artStationMedium != 'all')
+    if(artStationMedium != 0) // 0 = All
     {
-      artStationURL += '&medium='+artStationMedium;
+      artStationURL += '&medium_ids%5B%5D='+artStationMedium;
     }
 
-    if(artStationCategory != 'all')
-    {
-      artStationURL += '&category='+artStationCategory;
-    }
+    artStationURL += '&direction=desc';
 
-    artStationURL += '&sorting='+artStationOrdering;
+    artStationURL += "&per_page=60";
+
+    artStationURL += "&show_pro_first=true";
 
     artStationURL += '&page='+contentLoads;
-    // artStationURL += '&medium=digital3d';
-    // artStationURL += '&order=published_at';
 
     console.log(artStationURL);
 
@@ -250,15 +217,8 @@ function GetImagesArtStation(numberToGet)
 
       for (var i = 0; i < results.length; i++) 
       {
-        var result = results[i];
-        if(searchTerm)
-        {
-          NewArtStationCellSearch(artStationPreloadedCells, result); 
-        }
-        else
-        {
-          NewArtStationCell(artStationPreloadedCells, result); 
-        }
+        var result = results[i];        
+        NewArtStationCell(artStationPreloadedCells, result); 
       }
 
       console.log(artStationPreloadedCells.length + ' Cells Precached For Art Station After');      
@@ -280,41 +240,17 @@ function FinishedLoadingSource()
   DrawGridIfLoaded();
 }
 
-function NewArtStationCellSearch(array, result)
+function NewArtStationCell(array, result)
 {
-  //console.log(result);
-
   var cell = new Cell(
     "ArtStation"+result.id, 
     result.smaller_square_cover_url, 
     result.url, 
-    result.adult_content, 
+    result.hide_as_adult, 
     '', 
     '', // No featured equivalent for ArtStation
-    50,
+    0,
     result.smaller_square_cover_url,
-    '',
-    result.user.full_name,
-    '',
-    result.title,
-    false);
-
-    array.push(cell);
-}
-
-function NewArtStationCell(array, result)
-{
-  console.log(result);
-
-  var cell = new Cell(
-    "ArtStation"+result.id, 
-    result.cover.thumb_url, 
-    result.permalink, 
-    result.adult_content, 
-    result.published_at, 
-    result.published_at, // No featured equivalent for ArtStation
-    result.views_count,
-    result.cover.small_square_url,
     '',
     result.user.full_name,
     '',
@@ -347,16 +283,12 @@ function GetImagesBehance()
     be.project.search(searchTerm, behanceOrdering, contentLoads, function success(results) {    
       
       console.log(results.projects.length + ' Behance Results');
-      console.log(results.projects);
-
-
+      
       for (var b = 0; b < results.projects.length; b++) 
       {
           var project = results.projects[b];
           var imgURL = project.covers['404'] != undefined ? project.covers['404'] : project.covers['original'];          
           var featuredOn = project.features != undefined ? project.features[0].featured_on : project.published_on;
-         
-          console.log(project);
 
          try
          {
@@ -420,18 +352,9 @@ function DrawGridIfLoaded()
 }
 
 function SortCells()
-{
-  if(totalOrdering == 'random')
-  {
-    shuffle(displayCells);
-  }
-  else if(totalOrdering == 'views')
-  {
-    displayCells.sort(function(a, b) { 
-        return b.views - a.views;
-    })
-  }
-
+{  
+  // No timestamps for Artstation work, so just shuffle for now.
+  shuffle(displayCells);
 }
 
 function shuffle(a) {
@@ -455,7 +378,6 @@ function ClearGrid()
       var distFromBtm = 150;
 
       if($(window).scrollTop() + $(window).height() >= $('body')[0].scrollHeight-distFromBtm) {
-        console.log('BOTTOM REACHED');
         GetImages();
       }
   })
