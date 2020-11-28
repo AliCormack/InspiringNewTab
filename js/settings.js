@@ -6,6 +6,7 @@ var dateEnabled;
 var tutorialViewed;
 var artStationEnabled;
 var behanceEnabled;
+var itchEnabled;
 var behanceOrdering;
 var artStationOrdering;
 var seperateTab;
@@ -19,6 +20,7 @@ var defaultDateEnabled = true;
 var defaultTutorialViewed = false;
 var defaultArtStationEnabled = true;
 var defaultBehanceEnabled = true;
+var defaultItchEnabled = true;
 var defaultBehanceOrdering = 'featured_date';
 var defaultArtstationMedium = 0;
 var defaultArtstationOrdering = 'trending';
@@ -28,6 +30,8 @@ var defaultSeperateTab = false;
 
 var behanceElement;
 var artStationElement;
+var itchElement;
+
 var searchTermElement;
 
 var seperateTabElement;
@@ -47,6 +51,8 @@ function save_options()
 
   artStationEnabled = artStationElement.checked;
   behanceEnabled = behanceElement.checked;
+  itchEnabled = itchElement.checked;
+
   searchTerm = searchTermElement.value;
 
   seperateTab = seperateTabElement.checked;
@@ -66,6 +72,7 @@ function save_options()
     tutorialViewed: tutorialViewed,
     artStationEnabled : artStationEnabled,
     behanceEnabled : behanceEnabled,
+    itchEnabled : itchEnabled,
     behanceOrdering : behanceOrdering,
     artStationMedium : artStationMedium,
     artStationOrdering : artStationOrdering,
@@ -97,6 +104,7 @@ function restore_options()
     tutorialViewed2: defaultTutorialViewed,
     artStationEnabled : defaultArtStationEnabled,
     behanceEnabled : defaultBehanceEnabled,
+    itchEnabled : defaultItchEnabled,
     behanceOrdering : defaultBehanceOrdering,
     artStationMedium : defaultArtstationMedium,
     artStationOrdering : defaultArtstationOrdering,
@@ -110,6 +118,7 @@ function restore_options()
     
     artStationEnabled = items.artStationEnabled;
     behanceEnabled = items.behanceEnabled;
+    itchEnabled = items.itchEnabled;
     behanceOrdering = items.behanceOrdering;
     artStationMedium = items.artStationMedium;
     artStationOrdering = items.artStationOrdering;
@@ -122,6 +131,7 @@ function restore_options()
 
     behanceElement.checked    = behanceEnabled;
     artStationElement.checked = artStationEnabled;
+    itchElement.checked = itchEnabled;
     searchTermElement.value   = searchTerm;
     seperateTabElement.checked = seperateTab;
     timeToggleElement.checked = timeEnabled;
@@ -208,6 +218,7 @@ function updateDateTimeHTML()
 
 var s_BehanceEnabledID = 'behance_enabled';
 var s_ArtStationEnabledID = 'artstation_enabled';
+var s_ItchEnabledID = 'itch_enabled';
 var s_SearchTermID = 'search_term';
 var s_SeperateTabID = 'seperate_tab';
 var s_DisplayOrderID = 'display_order';
@@ -219,6 +230,8 @@ function UpdateHTML()
 {
   behanceElement              = document.getElementById(s_BehanceEnabledID);
   artStationElement           = document.getElementById(s_ArtStationEnabledID);
+  itchElement                 = document.getElementById(s_ItchEnabledID);
+  
   searchTermElement           = document.getElementById(s_SearchTermID);
 
   seperateTabElement          = document.getElementById(s_SeperateTabID);
@@ -256,6 +269,10 @@ $(document).ready(function()
     refresh();
   });
   $('#'+s_ArtStationEnabledID).change(function() {
+    save_options();
+    refresh();
+  });
+  $('#'+s_ItchEnabledID).change(function() {
     save_options();
     refresh();
   });

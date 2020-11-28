@@ -42,12 +42,13 @@ var ARTSTATION_MEDIUM =
 
 // Static Values
 var s_initialNumImagesToLoad = 50;
-var s_maxImagesToDisplay = 60;
+var s_maxImagesToDisplay = 90;
 
 var imagesToDisplayPerSource; // Match the amount of images grabbed by behance to evenly shuffle them
 var contentLoads; // Index this to load new content
 var artStationPreloadedCells; // Keep some cells preloaded if we don't want to display them all immediately
 var behancePreloadedCells;
+var itchPreloadedCells;
 var displayCells;
 var loadingSources;
 
@@ -57,6 +58,7 @@ function Init()
   contentLoads = 1;
   artStationPreloadedCells = [];
   behancePreloadedCells = [];
+  itchPreloadedCells = [];
 }
 
 Init();
@@ -86,7 +88,10 @@ function Cell(id, imgUrl, linkUrl, adult, date, featuredDate, views, previewImag
 
 function GetImages()
 {
-  loadingSources = artStationEnabled + behanceEnabled;
+  if(loadingSources > 0)
+    return;
+
+  loadingSources = artStationEnabled + behanceEnabled + itchEnabled;
 
   imagesToDisplayPerSource = s_maxImagesToDisplay / loadingSources;
 
@@ -100,6 +105,11 @@ function GetImages()
   if(behanceEnabled)
   {
     GetImagesBehance();
+  }
+  
+  if(itchEnabled)
+  {
+    GetImagesItch();
   }
 
   contentLoads++;
@@ -163,6 +173,105 @@ function FadeIn()
   });
 }
 
+// From https://davidwalsh.name/convert-xml-json
+function xmlToJson(xml) {
+	
+	// Create the return object
+	var obj = {};
+
+	if (xml.nodeType == 1) { // element
+		// do attributes
+		if (xml.attributes.length > 0) {
+		obj["@attributes"] = {};
+			for (var j = 0; j < xml.attributes.length; j++) {
+				var attribute = xml.attributes.item(j);
+				obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+			}
+		}
+	} else if (xml.nodeType == 3) { // text
+		obj = xml.nodeValue;
+	}
+
+	// do children
+	if (xml.hasChildNodes()) {
+		for(var i = 0; i < xml.childNodes.length; i++) {
+			var item = xml.childNodes.item(i);
+			var nodeName = item.nodeName;
+			if (typeof(obj[nodeName]) == "undefined") {
+				obj[nodeName] = xmlToJson(item);
+			} else {
+				if (typeof(obj[nodeName].push) == "undefined") {
+					var old = obj[nodeName];
+					obj[nodeName] = [];
+					obj[nodeName].push(old);
+				}
+				obj[nodeName].push(xmlToJson(item));
+			}
+		}
+	}
+	return obj;
+};
+
+function GetImagesItch()
+{
+  console.log(itchPreloadedCells.length + ' Cells Precached For Itch');
+
+  if(itchPreloadedCells.length < imagesToDisplayPerSource)
+  {
+    var itchURL = "https://itch.io/games/new-and-popular.xml?page=";
+    itchURL += contentLoads;
+
+    $.ajax(
+    {
+      type: "GET",
+      url: itchURL,
+      dataType: "xml",
+      success: function(data) 
+      {
+        var jsonData = xmlToJson(data);
+        var results = jsonData.rss.channel.item;
+
+        console.log(results.length + ' Itch Results');
+
+        for (var i = 0; i < results.length; i++) 
+        {
+          var result = results[i];   
+          //console.log(result);     
+          NewItchCell(itchPreloadedCells, result); 
+        }
+
+        console.log(itchPreloadedCells.length + ' Cells Precached For Itch After');  
+
+        FinishedLoadingSource();
+      }
+    });
+  }
+  else
+  {
+    FinishedLoadingSource();
+  }
+}
+
+function NewItchCell(array, result)
+{
+  var cell = new Cell(
+    "Itch", 
+    result.imageurl['#text'], 
+    result.link['#text'], 
+    false, 
+    '', 
+    '', // No featured equivalent for ArtStation
+    0,
+    result.imageurl['#text'],
+    '',
+    '',
+    '',
+    result.plainTitle['#text'],
+    false);
+
+    array.push(cell);
+}
+
 function GetImagesArtStation(numberToGet)
 {  
   console.log(artStationPreloadedCells.length + ' Cells Precached For ArtStation');
@@ -201,7 +310,7 @@ function GetImagesArtStation(numberToGet)
 
     artStationURL += '&direction=desc';
 
-    artStationURL += "&per_page=60";
+    artStationURL += "&per_page="+imagesToDisplayPerSource;
 
     artStationURL += "&show_pro_first=true";
 
@@ -236,7 +345,7 @@ function GetImagesArtStation(numberToGet)
 function FinishedLoadingSource()
 {
   loadingSources--;
-  console.log('Loading : '+loadingSources);
+  console.log('Finished Loading Source : '+loadingSources);
   DrawGridIfLoaded();
 }
 
@@ -339,15 +448,18 @@ function DrawGridIfLoaded()
 
     var artStationCellsNum  = Math.min(artStationPreloadedCells.length, imagesToDisplayPerSource);
     var behanceCellsNum     = Math.min(behancePreloadedCells.length, imagesToDisplayPerSource);
+    var itchNum             = Math.min(itchPreloadedCells.length, imagesToDisplayPerSource);
 
     displayCells = artStationPreloadedCells.splice(0, artStationCellsNum);
     displayCells = displayCells.concat(behancePreloadedCells.splice(0, behanceCellsNum));
+    displayCells = displayCells.concat(itchPreloadedCells.splice(0, itchNum));
 
     SortCells();
     DrawGrid();
 
     console.log(behancePreloadedCells.length + ' Remaining Cells Precached For Behance After Draw');
     console.log(artStationPreloadedCells.length + ' Remaining Cells Precached For ArtStation After Draw');
+    console.log(itchPreloadedCells.length + ' Remaining Cells Precached For Itch After Draw');
   }
 }
 
