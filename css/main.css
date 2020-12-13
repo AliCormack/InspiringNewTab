@@ -61,10 +61,38 @@ body {
       padding: 0; }
       .tutorial .content ul li span {
         position: relative;
-        left: -5px; }
+        left: -5px;
+        font-size: 15px;
+        line-height: 20px; }
 
 .menu-open {
   border-radius: 0 0 7px 7px !important; }
+
+.show {
+  z-index: 1000;
+  position: absolute;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 24px;
+  border-top-left-radius: 0px;
+  padding: 12px;
+  display: block;
+  margin: 0;
+  list-style-type: none;
+  list-style: none;
+  font-weight: bold; }
+
+.hide {
+  display: none; }
+
+.show li {
+  list-style: none; }
+
+.show a {
+  border: 0 !important;
+  text-decoration: none; }
+
+.show a:hover {
+  text-decoration: underline !important; }
 
 .settings-btn {
   background: rgba(0, 0, 0, 0.75);
@@ -115,6 +143,16 @@ body {
   .settings-window .label {
     height: 25px;
     line-height: 25px; }
+  .settings-window button {
+    position: absolute;
+    display: inline-block;
+    width: 87%;
+    border: 0;
+    background: rgba(255, 255, 255, 0.9);
+    height: 21px;
+    border-radius: 24px;
+    font-family: 'Cabin', sans-serif;
+    font-size: 13px; }
   .settings-window #search_term, .settings-window #sort_method {
     position: absolute;
     display: inline-block;

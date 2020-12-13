@@ -43,6 +43,7 @@ var ARTSTATION_MEDIUM =
 // Static Values
 var s_initialNumImagesToLoad = 50;
 var s_maxImagesToDisplay = 90;
+var s_maxFromArtstation = 75;
 
 var imagesToDisplayPerSource; // Match the amount of images grabbed by behance to evenly shuffle them
 var contentLoads; // Index this to load new content
@@ -93,7 +94,7 @@ function GetImages()
 
   loadingSources = artStationEnabled + behanceEnabled + itchEnabled;
 
-  imagesToDisplayPerSource = s_maxImagesToDisplay / loadingSources;
+  imagesToDisplayPerSource = Math.min(s_maxFromArtstation, s_maxImagesToDisplay / loadingSources);
 
   console.log('GetImages : Page '+contentLoads+' From '+loadingSources+' Sources')
 
@@ -118,7 +119,6 @@ function GetImages()
 
 function DrawGrid()
 {
-
   for (var i = 0; i <displayCells.length; i++) (function(i)
   {
     var cell = displayCells[i];
@@ -131,7 +131,8 @@ function DrawGrid()
       div.setAttribute('class', 'cell');   
       
       var img = document.createElement("img");
-      img.setAttribute('src', cell.imgUrl); 
+      //img.setAttribute('src', cell.imgUrl); 
+      img.setAttribute('data-gifffer', cell.imgUrl); 
       div.appendChild(img);
 
       div.onclick = function(e)
@@ -140,6 +141,23 @@ function DrawGrid()
         window.open(cell.linkUrl, seperateTab ? "_blank" : "_self");
       }
 
+      div.addEventListener("contextmenu", function(e) 
+      {
+        e.preventDefault();
+
+        var rmenu = document.getElementById("rmenu");
+
+        rmenu.className = "show";
+        rmenu.style.left = e.pageX + 'px';
+        rmenu.style.top = e.pageY + 'px';
+
+        rmenu.onclick = function(e)
+        {
+          AddUrlToHide(cell.linkUrl);
+        }
+      });
+
+     
       $(".grid").append(div);
 
       FadeIn();
@@ -149,6 +167,12 @@ function DrawGrid()
   })(i);
 
   IsScreenFilled();
+
+  Gifffer();
+
+  $(document).bind("click", function(event) {
+    document.getElementById("rmenu").className = "hide";
+  });
 
 }
 
@@ -252,25 +276,45 @@ function GetImagesItch()
   }
 }
 
+function ValidateCell(cell)
+{
+  if(urlsToHide.includes(cell.linkUrl))
+  {
+    return false;
+  }
+  return true;
+}
+
 function NewItchCell(array, result)
 {
-  var cell = new Cell(
-    "Itch", 
-    result.imageurl['#text'], 
-    result.link['#text'], 
-    false, 
-    '', 
-    '', // No featured equivalent for ArtStation
-    0,
-    result.imageurl['#text'],
-    '',
-    '',
-    '',
-    result.plainTitle['#text'],
-    false);
+  if(result.imageurl)
+  {
+    var imgUrl = result.imageurl['#text'];
 
-    array.push(cell);
-}
+    if(imgUrl.length > 0)
+    {
+      var cell = new Cell(
+        "Itch", 
+        result.imageurl['#text'], 
+        result.link['#text'], 
+        false, 
+        '', 
+        '', // No featured equivalent for ArtStation
+        0,
+        result.imageurl['#text'],
+        '',
+        '',
+        '',
+        result.plainTitle['#text'],
+        false);
+
+        if(ValidateCell(cell))
+        {
+          array.push(cell);
+        }
+    }
+  }
+} 
 
 function GetImagesArtStation(numberToGet)
 {  
@@ -351,22 +395,29 @@ function FinishedLoadingSource()
 
 function NewArtStationCell(array, result)
 {
-  var cell = new Cell(
-    "ArtStation"+result.id, 
-    result.smaller_square_cover_url, 
-    result.url, 
-    result.hide_as_adult, 
-    '', 
-    '', // No featured equivalent for ArtStation
-    0,
-    result.smaller_square_cover_url,
-    '',
-    result.user.full_name,
-    '',
-    result.title,
-    false);
+  // Don't add mature content
+  if(result.hide_as_adult == false)
+  {
+    var cell = new Cell(
+      "ArtStation"+result.id, 
+      result.smaller_square_cover_url, 
+      result.url, 
+      result.hide_as_adult, 
+      '', 
+      '', // No featured equivalent for ArtStation
+      0,
+      result.smaller_square_cover_url,
+      '',
+      result.user.full_name,
+      '',
+      result.title,
+      false);
 
-    array.push(cell);
+      if(ValidateCell(cell))
+      {
+        array.push(cell);
+      }
+  }
 }
 
 function GetImagesBehance()
@@ -424,7 +475,10 @@ function GetImagesBehance()
           console.log(e);
         }
 
-        behancePreloadedCells.push(cell);            
+        if(ValidateCell(cell))
+        {
+          behancePreloadedCells.push(cell);
+        }             
          
       }   
 

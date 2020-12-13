@@ -7,6 +7,8 @@
   <script type="text/javascript" src="js/inspiration.js"></script>
   <script type="text/javascript" src="js/settings.js"></script>
 
+  <script type="text/javascript" src="js/gifffer.js"></script>
+
   <link rel="stylesheet" type="text/css" href="css/main.css">
   <link rel="stylesheet" type="text/css" href="css/lib.css">
   <link href="https://fonts.googleapis.com/css?family=Saira" rel="stylesheet">
@@ -44,7 +46,7 @@
         <h2>General</h2>        
 
         <div class="toggle">          
-          <label title="Toggle whether Inspire shows images from Behance.net">Get Images from Behance</label>
+          <label title="Toggle whether Inspire shows images from Behance.net">Behance Enabled</label>
           <label class="switch">
             <input id="behance_enabled" type="checkbox">
             <span class="slider round"></span>
@@ -52,7 +54,7 @@
         </div>
 
         <div class="toggle">
-          <label title="Toggle whether Inspire shows images from ArtStation.com">Get Images from ArtStation</label>
+          <label title="Toggle whether Inspire shows images from ArtStation.com">ArtStation Enabled</label>
           <label class="switch">
             <input id="artstation_enabled" type="checkbox">
             <span class="slider round"></span>
@@ -60,7 +62,7 @@
         </div>
 
         <div class="toggle">
-          <label title="Toggle whether Inspire shows images from Itch.io">Get Images from Itch</label>
+          <label title="Toggle whether Inspire shows games from Itch.io">Itch Enabled</label>
           <label class="switch">
             <input id="itch_enabled" type="checkbox">
             <span class="slider round"></span>
@@ -72,12 +74,16 @@
           <input id="search_term" type="text" name="searchterm"><br>
         </div>
 
-        <div class="toggle no-padding-bottom">          
+        <div class="toggle">          
           <label title="Whether to open images in a new tab, or this tab.">Open Images in a Seperate Tab</label>
           <label class="switch">
             <input id="seperate_tab" type="checkbox">
             <span class="slider round"></span>
           </label>
+        </div>
+
+        <div class="toggle no-padding-bottom">          
+          <button id="clear_hidden" type="button">Clear Hidden Images</button>         
         </div>
 
         <div class="seperator"></div>
@@ -131,5 +137,10 @@
       </div>
 
     </div>
+
+    <div class="hide" id="rmenu">      
+      <p>Hide This Image</p>
+    </div>
+
   </body>
 </html>

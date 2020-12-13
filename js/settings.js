@@ -10,6 +10,7 @@ var itchEnabled;
 var behanceOrdering;
 var artStationOrdering;
 var seperateTab;
+var urlsToHide = [];
 
 // Defaults
 
@@ -25,6 +26,7 @@ var defaultBehanceOrdering = 'featured_date';
 var defaultArtstationMedium = 0;
 var defaultArtstationOrdering = 'trending';
 var defaultSeperateTab = false;
+var defaultUrlsToHide = [];
 
 // HTML
 
@@ -43,6 +45,20 @@ var artstationOrderDropdownElement;
 
 var timeToggleElement;
 var dateToggleElement;
+
+function AddUrlToHide(url)
+{
+  urlsToHide.push(url);
+  save_options();
+  refresh();  
+}
+
+function ClearUrlsToHide()
+{
+  urlsToHide = [];
+  save_options();
+  refresh();
+}
 
 // Saves options to chrome.storage.sync.
 function save_options()
@@ -76,7 +92,8 @@ function save_options()
     behanceOrdering : behanceOrdering,
     artStationMedium : artStationMedium,
     artStationOrdering : artStationOrdering,
-    seperateTab : seperateTab
+    seperateTab : seperateTab,
+    urlsToHide : urlsToHide
   });
 
   updateDateTimeHTML();
@@ -101,14 +118,15 @@ function restore_options()
     searchTerm: defaultSearchTerm,
     timeEnabled: defaultTimeEnabled,
     dateEnabled: defaultDateEnabled,
-    tutorialViewed2: defaultTutorialViewed,
+    tutorialViewed3: defaultTutorialViewed,
     artStationEnabled : defaultArtStationEnabled,
     behanceEnabled : defaultBehanceEnabled,
     itchEnabled : defaultItchEnabled,
     behanceOrdering : defaultBehanceOrdering,
-    artStationMedium : defaultArtstationMedium,
+    artStationMedium2 : defaultArtstationMedium,
     artStationOrdering : defaultArtstationOrdering,
-    seperateTab : defaultSeperateTab
+    seperateTab : defaultSeperateTab,
+    urlsToHide : defaultUrlsToHide
   }, function(items) 
   {
     
@@ -120,12 +138,12 @@ function restore_options()
     behanceEnabled = items.behanceEnabled;
     itchEnabled = items.itchEnabled;
     behanceOrdering = items.behanceOrdering;
-    artStationMedium = items.artStationMedium;
+    artStationMedium = items.artStationMedium2;
     artStationOrdering = items.artStationOrdering;
 
     seperateTab = items.seperateTab;
 
-    tutorialViewed = items.tutorialViewed2;
+    tutorialViewed = items.tutorialViewed3;
    
     console.log(items);
 
@@ -160,12 +178,13 @@ function addTutorialIfRequired(tutorialViewed)
       "<h1>Inspire</h1>"+
       "<h2>New Tab Gallery</h2>"+
       "<br>"+
-      "<p>Inspire sources its content from both <a href='https://www.behance.net/'>Behance.net</a> and <a href='https://www.artstation.com/'>ArtStation.com</a>. We hope you enjoy the gorgeous art and design fresh daily from around the web!</p>"+
+      "<p>Inspire sources its content from <a href='https://www.behance.net/'>Behance.net</a>, <a href='https://www.artstation.com/'>ArtStation.com</a> and <a href='https://www.https://itch.io/'>Itch.io</a>. We hope you enjoy the gorgeous art, design and games fresh daily from around the web!</p>"+
       "<br>"+
-      "<p>You can edit these image sources to your liking, specify a search term, and find many other customisation options via the preferences panel in the bottom right (&#9881;)</p><br> "+
+      "<p><b>You can edit these sources to your liking, specify a search term, and find many other customisation options via the preferences panel in the bottom right (&#9881;)</b></p><br> "+
        "<p>Any and all <a href='https://chrome.google.com/webstore/detail/inspire-gallery-new-tab/feldechheiacimdajbkleojednhpophc'>feedback</a> is welcome!</p><br>"+
       "<h2>New in V1.0</h2>"+
       "<ul>"+
+      "<li><span><b>Itch.io Support Added</b></span></li>"+
       "<li><span>Support for new ArtStation APIs</span></li>"+
       "<li><span>Improved Grid Layout</span></li>"+
       "<li><span>More Artstation Mediums</span></li>"+
@@ -179,7 +198,7 @@ $( "#close-tutorial-btn" ).click(function()
 {
   $( "#tutorial" ).remove();
   chrome.storage.sync.set({
-    tutorialViewed2: true,
+    tutorialViewed3: true,
   });
 });
 
