@@ -21,7 +21,7 @@ var defaultDateEnabled = true;
 var defaultTutorialViewed = false;
 var defaultArtStationEnabled = true;
 var defaultBehanceEnabled = true;
-var defaultItchEnabled = true;
+var defaultItchEnabled = false;
 var defaultBehanceOrdering = 'featured_date';
 var defaultArtstationMedium = 0;
 var defaultArtstationOrdering = 'trending';
@@ -43,6 +43,8 @@ var behanceOrderDropdownElement;
 var artstationMediumDropdownElement;
 var artstationOrderDropdownElement;
 
+var resetHiddenElement;
+
 var timeToggleElement;
 var dateToggleElement;
 
@@ -53,7 +55,7 @@ function AddUrlToHide(url)
   refresh();  
 }
 
-function ClearUrlsToHide()
+function ResetUrlsToHide()
 {
   urlsToHide = [];
   save_options();
@@ -81,6 +83,14 @@ function save_options()
   timeEnabled = timeToggleElement.checked;
   dateEnabled = dateToggleElement.checked;  
 
+  save_chrome_storage();
+
+  updateDateTimeHTML();
+
+}
+
+function save_chrome_storage()
+{
   chrome.storage.sync.set({
     searchTerm: searchTerm,
     timeEnabled: timeEnabled,
@@ -95,9 +105,6 @@ function save_options()
     seperateTab : seperateTab,
     urlsToHide : urlsToHide
   });
-
-  updateDateTimeHTML();
-
 }
 
 function refresh()
@@ -118,7 +125,7 @@ function restore_options()
     searchTerm: defaultSearchTerm,
     timeEnabled: defaultTimeEnabled,
     dateEnabled: defaultDateEnabled,
-    tutorialViewed3: defaultTutorialViewed,
+    tutorialViewed4: defaultTutorialViewed,
     artStationEnabled : defaultArtStationEnabled,
     behanceEnabled : defaultBehanceEnabled,
     itchEnabled : defaultItchEnabled,
@@ -143,7 +150,7 @@ function restore_options()
 
     seperateTab = items.seperateTab;
 
-    tutorialViewed = items.tutorialViewed3;
+    tutorialViewed = items.tutorialViewed4;
    
     console.log(items);
 
@@ -164,6 +171,8 @@ function restore_options()
     addTutorialIfRequired(tutorialViewed);
 
     GetImages();
+
+    save_options();
   });
 }
 
@@ -171,36 +180,58 @@ function addTutorialIfRequired(tutorialViewed)
 {
   if(!tutorialViewed)
   {
-    $("body").append("<div id='tutorial' class='tutorial'>"+
-    "<div class='content'>"+
-      "<h3>Welcome to </h3>"+
-      "<img width=200 height=200 src='img/icon/Icon-Transparent-512.png'></img>"+
-      "<h1>Inspire</h1>"+
-      "<h2>New Tab Gallery</h2>"+
-      "<br>"+
-      "<p>Inspire sources its content from <a href='https://www.behance.net/'>Behance.net</a>, <a href='https://www.artstation.com/'>ArtStation.com</a> and <a href='https://www.https://itch.io/'>Itch.io</a>. We hope you enjoy the gorgeous art, design and games fresh daily from around the web!</p>"+
-      "<br>"+
-      "<p><b>You can edit these sources to your liking, specify a search term, and find many other customisation options via the preferences panel in the bottom right (&#9881;)</b></p><br> "+
-       "<p>Any and all <a href='https://chrome.google.com/webstore/detail/inspire-gallery-new-tab/feldechheiacimdajbkleojednhpophc'>feedback</a> is welcome!</p><br>"+
-      "<h2>New in V1.0</h2>"+
-      "<ul>"+
-      "<li><span><b>Itch.io Support Added</b></span></li>"+
-      "<li><span>Support for new ArtStation APIs</span></li>"+
-      "<li><span>Improved Grid Layout</span></li>"+
-      "<li><span>More Artstation Mediums</span></li>"+
-      "<li><span>Numerous Bug Fixes</span></li>"+
-      "</ul>"+
-      "<button id='close-tutorial-btn' type='button'>Thanks, got it!</button>"+
-   "</div>"+
-"</div>");
+    var tutorial_1_element = document.getElementById("tutorial_1");
+    tutorial_1_element.classList.remove("hidden");
+    $("#close-tutorial-1-btn").click(function()
+    {      
+      tutorial_1_element.classList.add("hidden");
 
-$( "#close-tutorial-btn" ).click(function()
-{
-  $( "#tutorial" ).remove();
-  chrome.storage.sync.set({
-    tutorialViewed3: true,
-  });
-});
+      // Part 2
+      var tutorial_2_element = document.getElementById("tutorial_2");
+      tutorial_2_element.classList.remove("hidden");
+
+      // Sources
+      // Behance
+      var tutorial_behance_enabled = document.getElementById("tutorial_behance_enabled");
+      tutorial_behance_enabled.checked = behanceEnabled;
+      tutorial_behance_enabled.addEventListener('change', (event) =>  
+      {
+        behanceEnabled = event.target.checked;
+        save_chrome_storage();
+        refresh();
+      });
+
+      // Behance
+      var tutorial_artstation_enabled = document.getElementById("tutorial_artstation_enabled");
+      tutorial_artstation_enabled.checked = artStationEnabled;
+      tutorial_artstation_enabled.addEventListener('change', (event) =>  
+      {
+        artStationEnabled = event.target.checked;
+        save_chrome_storage();
+        refresh();
+      });
+
+      // Behance
+      var v = document.getElementById("tutorial_itch_enabled");
+      tutorial_itch_enabled.checked = itchEnabled;
+      tutorial_itch_enabled.addEventListener('change', (event) =>  
+      {
+        itchEnabled = event.target.checked;
+        save_chrome_storage();
+        refresh();
+      });
+      
+      $("#close-tutorial-2-btn").click(function()
+      {  
+        tutorial_2_element.classList.add("hidden");
+
+        chrome.storage.sync.set({
+          tutorialViewed4: true,
+        });
+
+        restore_options();
+      });
+    });
 
   }
 }
@@ -244,6 +275,7 @@ var s_DisplayOrderID = 'display_order';
 var s_BehanceOrderID = 'behance_order';
 var s_ArtStationMediumID = 'artstation_medium';
 var s_ArtStationOrderID = 'artstation_order';
+var s_ResetHiddenID = 'reset_hidden';
 
 function UpdateHTML()
 {
@@ -262,6 +294,8 @@ function UpdateHTML()
 
   timeToggleElement           = document.getElementById('time_enabled');
   dateToggleElement           = document.getElementById('date_enabled');
+
+  resetHiddenElement = document.getElementById(s_ResetHiddenID);
 }
 
 function AddSearchTermDropdownElements(enum_var, dropdownElementId)
@@ -278,7 +312,6 @@ function AddSearchTermDropdownElements(enum_var, dropdownElementId)
 $(document).ready(function()
 {  
   UpdateHTML();
-  
 
   $('#'+s_SearchTermID).on('input', function() {
       save_options();
@@ -325,6 +358,11 @@ $(document).ready(function()
     $("#settings-window").toggle();
     $( ".settings-btn" ).toggleClass('menu-open');
   });
+  
+  $('#'+s_ResetHiddenID).click(function()
+  {
+    ResetUrlsToHide();
+  });
 
   $("#search_term").on('keyup', function (e) {
       if (e.keyCode == 13) {
@@ -354,6 +392,5 @@ $(document).ready(function()
   AddSearchTermDropdownElements(ARTSTATION_SORTING, s_ArtStationOrderID);
 
   restore_options();
-
 });
 

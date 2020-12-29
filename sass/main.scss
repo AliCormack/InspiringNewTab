@@ -19,6 +19,11 @@ $transparent-black-bg : rgba(0, 0, 0, 0.75);
 $border-radius:7px;
 $inspire-blue:#008ae7;
 
+.hidden
+{
+  display: none;
+}
+
 body
 {
   margin:0;
@@ -37,7 +42,7 @@ body
   bottom:0;
   right:0;
   position:fixed;
-  background:rgba(0, 0, 0, 0.8);
+  background:rgba(0, 0, 0, 0.9);
   text-align:center;
   color:white;
 
@@ -48,9 +53,41 @@ body
     left: 50%;
     transform: translate(-50%, -50%);
 
-    width:380px;
+    $content-width:380px;
+    width:$content-width;
     margin:0;
+
+    .imgcontainer
+    {
+      $sources-width : 500px;
+      margin-left: ($content-width - $sources-width) / 2;
+      width:500px;
+      height:200px;
+      //background:pink;
+
+      .source
+      {
+        width:33.33%;
+        height:100%;
+        float:left;
+        //background:red;
+      }
+
+      input
+      {
+        $input-size:20px;
+        width:$input-size;
+        height:$input-size;
+        margin-top:8px;
+      }
+    }
     
+    img
+    {
+      $imgsize:100px;
+      width: $imgsize;
+      height: $imgsize;
+    }
 
     p
     {
@@ -63,7 +100,7 @@ body
       text-decoration: none;
     }
 
-    img
+    .inspire-logo
     {
       margin-bottom: -35px;
     }

@@ -1,3 +1,6 @@
+.hidden {
+  display: none; }
+
 body {
   margin: 0;
   background: white;
@@ -12,7 +15,7 @@ body {
   bottom: 0;
   right: 0;
   position: fixed;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.9);
   text-align: center;
   color: white; }
   .tutorial .content {
@@ -22,13 +25,28 @@ body {
     transform: translate(-50%, -50%);
     width: 380px;
     margin: 0; }
+    .tutorial .content .imgcontainer {
+      margin-left: -60px;
+      width: 500px;
+      height: 200px; }
+      .tutorial .content .imgcontainer .source {
+        width: 33.33%;
+        height: 100%;
+        float: left; }
+      .tutorial .content .imgcontainer input {
+        width: 20px;
+        height: 20px;
+        margin-top: 8px; }
+    .tutorial .content img {
+      width: 100px;
+      height: 100px; }
     .tutorial .content p {
       font-size: 1.3em;
       margin: 0px 0 0px 0; }
     .tutorial .content a {
       color: #008ae7;
       text-decoration: none; }
-    .tutorial .content img {
+    .tutorial .content .inspire-logo {
       margin-bottom: -35px; }
     .tutorial .content h1 {
       color: #008ae7;
