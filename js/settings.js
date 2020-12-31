@@ -8,7 +8,7 @@ var artStationEnabled;
 var behanceEnabled;
 var itchEnabled;
 var behanceOrdering;
-var artStationOrdering;
+var artStationOrdering2;
 var seperateTab;
 var urlsToHide = [];
 
@@ -77,8 +77,8 @@ function save_options()
 
   behanceOrdering = behanceOrderDropdownElement.value;
 
-  artStationMedium = artstationMediumDropdownElement.value;
-  artStationOrdering = artstationOrderDropdownElement.value;
+  artStationMedium2 = artstationMediumDropdownElement.value;
+  artStationOrdering2 = artstationOrderDropdownElement.value;
   
   timeEnabled = timeToggleElement.checked;
   dateEnabled = dateToggleElement.checked;  
@@ -100,8 +100,8 @@ function save_chrome_storage()
     behanceEnabled : behanceEnabled,
     itchEnabled : itchEnabled,
     behanceOrdering : behanceOrdering,
-    artStationMedium : artStationMedium,
-    artStationOrdering : artStationOrdering,
+    artStationMedium2 : artStationMedium2,
+    artStationOrdering2 : artStationOrdering2,
     seperateTab : seperateTab,
     urlsToHide : urlsToHide
   });
@@ -131,7 +131,7 @@ function restore_options()
     itchEnabled : defaultItchEnabled,
     behanceOrdering : defaultBehanceOrdering,
     artStationMedium2 : defaultArtstationMedium,
-    artStationOrdering : defaultArtstationOrdering,
+    artStationOrdering2 : defaultArtstationOrdering,
     seperateTab : defaultSeperateTab,
     urlsToHide : defaultUrlsToHide
   }, function(items) 
@@ -145,10 +145,12 @@ function restore_options()
     behanceEnabled = items.behanceEnabled;
     itchEnabled = items.itchEnabled;
     behanceOrdering = items.behanceOrdering;
-    artStationMedium = items.artStationMedium2;
-    artStationOrdering = items.artStationOrdering;
+    artStationMedium2 = items.artStationMedium2;
+    artStationOrdering2 = items.artStationOrdering2;
 
     seperateTab = items.seperateTab;
+    
+    urlsToHide = items.urlsToHide;
 
     tutorialViewed = items.tutorialViewed4;
    
@@ -164,8 +166,8 @@ function restore_options()
     
     behanceOrderDropdownElement.value = behanceOrdering;
     
-    artstationMediumDropdownElement.value = artStationMedium;
-    artstationOrderDropdownElement.value = artStationOrdering;
+    artstationMediumDropdownElement.value = artStationMedium2;
+    artstationOrderDropdownElement.value = artStationOrdering2;
 
     updateDateTimeHTML();
     addTutorialIfRequired(tutorialViewed);
@@ -238,32 +240,32 @@ function addTutorialIfRequired(tutorialViewed)
 
 function updateDateTimeHTML()
 {
-
-  if(timeEnabled == false)
+  if(timeEnabled == true)
   {
-    $('#time').hide();
+    $('#time').removeClass("hide");
   }
-  else{
-    $('#time').show();
-  }
-
-  if(dateEnabled == false)
+  else
   {
-    $('#date').hide();
-  }
-  else{
-    $('#date').show();
+    $('#time').addClass("hide");
   }
 
-  if(timeEnabled == false && dateEnabled == false)
+  if(dateEnabled == true)
   {
-    $('#time-and-date').hide();
+    $('#date').removeClass("hide");
   }
-  else{
-    $('#time-and-date').show();
+  else
+  {
+    $('#date').addClass("hide");
   }
-  
-  
+
+  if(timeEnabled == true || dateEnabled == true)
+  {
+    $('#time-and-date').removeClass("hide");
+  }
+  else
+  {
+    $('#time-and-date').addClass("hide");
+  }
 }
 
 var s_BehanceEnabledID = 'behance_enabled';

@@ -332,13 +332,13 @@ function GetImagesArtStation(numberToGet)
       
       artStationURL += '&query='+searchTerm;
     
-      artStationURL += '&sorting='+artStationOrdering;
+      artStationURL += '&sorting='+artStationOrdering2;
     }
     else
     {
       artStationURL = 'https://www.artstation.com/api/v2/community/explore/projects/';
 
-      artStationURL += artStationOrdering;
+      artStationURL += artStationOrdering2;
       artStationURL += ".json?";
 
       console.log(artStationURL);
@@ -347,9 +347,9 @@ function GetImagesArtStation(numberToGet)
 
     }
 
-    if(artStationMedium != 0) // 0 = All
+    if(artStationMedium2 != 0) // 0 = All
     {
-      artStationURL += '&medium_ids%5B%5D='+artStationMedium;
+      artStationURL += '&medium_ids%5B%5D='+artStationMedium2;
     }
 
     artStationURL += '&direction=desc';
