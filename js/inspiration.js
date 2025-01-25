@@ -11,9 +11,18 @@ var DISPLAY_ORDER =
 
 var BEHANCE_ORDER = 
 {
-  featured_date: "Featured Date",
   appreciations: "Appreciations",
-  views : "Views"
+  comments: "Comments",
+  views : "Views",
+  published_date : "Published Date"
+}
+
+var BEHANCE_TIME = 
+{
+  today: "Today",
+  week: "Week",
+  month : "Month",
+  all : "All Time",
 }
 
 var ARTSTATION_SORTING = 
@@ -440,7 +449,7 @@ function GetImagesBehance()
   if(behancePreloadedCells.length < imagesToDisplayPerSource)
   {
     // Using callbacks
-    be.project.search(searchTerm, behanceOrdering, contentLoads, function success(results) {    
+    be.project.search(searchTerm, behanceTime, behanceOrdering, contentLoads, function success(results) {    
       
       console.log(results.projects.length + ' Behance Results');
       

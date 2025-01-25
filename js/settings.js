@@ -8,6 +8,7 @@ var artStationEnabled;
 var behanceEnabled;
 var itchEnabled;
 var behanceOrdering;
+var behanceTime;
 var artStationOrdering2;
 var seperateTab;
 var urlsToHide = [];
@@ -22,10 +23,11 @@ var defaultTutorialViewed = false;
 var defaultArtStationEnabled = true;
 var defaultBehanceEnabled = true;
 var defaultItchEnabled = false;
-var defaultBehanceOrdering = 'featured_date';
+var defaultBehanceOrdering = 'appreciations';
+var defaultBehanceTime = 'today';
 var defaultArtstationMedium = 0;
 var defaultArtstationOrdering = 'trending';
-var defaultSeperateTab = false;
+var defaultSeperateTab = true;
 var defaultUrlsToHide = [];
 
 // HTML
@@ -39,6 +41,7 @@ var searchTermElement;
 var seperateTabElement;
 
 var behanceOrderDropdownElement;
+var behanceTimeDropdownElement;
 
 var artstationMediumDropdownElement;
 var artstationOrderDropdownElement;
@@ -76,6 +79,7 @@ function save_options()
   seperateTab = seperateTabElement.checked;
 
   behanceOrdering = behanceOrderDropdownElement.value;
+  behanceTime = behanceTimeDropdownElement.value;
 
   artStationMedium2 = artstationMediumDropdownElement.value;
   artStationOrdering2 = artstationOrderDropdownElement.value;
@@ -100,6 +104,7 @@ function save_chrome_storage()
     behanceEnabled : behanceEnabled,
     itchEnabled : itchEnabled,
     behanceOrdering : behanceOrdering,
+    behanceTime : behanceTime,
     artStationMedium2 : artStationMedium2,
     artStationOrdering2 : artStationOrdering2,
     seperateTab : seperateTab,
@@ -130,6 +135,7 @@ function restore_options()
     behanceEnabled : defaultBehanceEnabled,
     itchEnabled : defaultItchEnabled,
     behanceOrdering : defaultBehanceOrdering,
+    behanceTime : defaultBehanceTime,
     artStationMedium2 : defaultArtstationMedium,
     artStationOrdering2 : defaultArtstationOrdering,
     seperateTab : defaultSeperateTab,
@@ -145,6 +151,7 @@ function restore_options()
     behanceEnabled = items.behanceEnabled;
     itchEnabled = items.itchEnabled;
     behanceOrdering = items.behanceOrdering;
+    behanceTime = items.behanceTime;
     artStationMedium2 = items.artStationMedium2;
     artStationOrdering2 = items.artStationOrdering2;
 
@@ -165,6 +172,7 @@ function restore_options()
     dateToggleElement.checked = dateEnabled;    
     
     behanceOrderDropdownElement.value = behanceOrdering;
+    behanceTimeDropdownElement.value = behanceTime;
     
     artstationMediumDropdownElement.value = artStationMedium2;
     artstationOrderDropdownElement.value = artStationOrdering2;
@@ -275,6 +283,7 @@ var s_SearchTermID = 'search_term';
 var s_SeperateTabID = 'seperate_tab';
 var s_DisplayOrderID = 'display_order';
 var s_BehanceOrderID = 'behance_order';
+var s_BehanceTimeID = 'behance_time';
 var s_ArtStationMediumID = 'artstation_medium';
 var s_ArtStationOrderID = 'artstation_order';
 var s_ResetHiddenID = 'reset_hidden';
@@ -290,6 +299,7 @@ function UpdateHTML()
   seperateTabElement          = document.getElementById(s_SeperateTabID);
 
   behanceOrderDropdownElement = document.getElementById(s_BehanceOrderID);
+  behanceTimeDropdownElement = document.getElementById(s_BehanceTimeID);
 
   artstationMediumDropdownElement = document.getElementById(s_ArtStationMediumID);
   artstationOrderDropdownElement = document.getElementById(s_ArtStationOrderID);
@@ -334,6 +344,10 @@ $(document).ready(function()
     save_options();
   });
   $('#'+s_BehanceOrderID).on('input', function() {
+    save_options();
+    refresh();
+  });
+  $('#'+s_BehanceTimeID).on('input', function() {
     save_options();
     refresh();
   });
@@ -390,6 +404,7 @@ $(document).ready(function()
 
   AddSearchTermDropdownElements(DISPLAY_ORDER, s_DisplayOrderID);
   AddSearchTermDropdownElements(BEHANCE_ORDER, s_BehanceOrderID);
+  AddSearchTermDropdownElements(BEHANCE_TIME, s_BehanceTimeID);
   AddSearchTermDropdownElements(ARTSTATION_MEDIUM, s_ArtStationMediumID);
   AddSearchTermDropdownElements(ARTSTATION_SORTING, s_ArtStationOrderID);
 

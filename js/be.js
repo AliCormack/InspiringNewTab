@@ -131,15 +131,15 @@
 		return get(ext, param, callback);
 	};
 
-	be.project.search = function(searchTerm, sorting, getPage, callback) {
+	be.project.search = function(searchTerm, timeIn, sorting, getPage, callback) {
 		var param
 		if(searchTerm != '')
 		{
-			param = {q: searchTerm, sort:sorting, page:getPage};
+			param = {q: searchTerm, sort:sorting, page:getPage, time:timeIn};
 		}
 		else
 		{
-			param = {sort:sorting, page:getPage};
+			param = {sort:sorting, page:getPage, time:timeIn};
 		}
 		
 		var ext = "projects";
